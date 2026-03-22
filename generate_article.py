@@ -20,7 +20,7 @@ import anthropic
 
 # ── 設定 ────────────────────────────────────────────────
 ARTICLES_DIR = "./articles"          # 生成したHTMLを保存するフォルダ
-MODEL        = "claude-sonnet-4-6"     # 使用モデル
+MODEL        = "claude-sonnet-4-6"   # 使用モデル
 MAX_TOKENS   = 8000
 
 # 著者ボックス HTML（全記事共通）
@@ -89,7 +89,7 @@ OUTPUT FORMAT — respond with a single JSON object:
   ]
 }
 
-IMPORTANT: Return ONLY the JSON. No markdown fences, no preamble.
+IMPORTANT: Return ONLY the JSON object. No markdown fences, no preamble, no explanation text before or after the JSON.
 """
 
 def get_existing_slugs() -> list[str]:
@@ -126,21 +126,17 @@ Respond with ONLY a plain topic sentence. Example: "What Is a Crypto Wallet and 
 
 # ── HTML テンプレート ─────────────────────────────────────
 def build_html(data: dict, author_box: str) -> str:
-    # Key takeaways
     kp_items = "\n".join(f"        <li>{t}</li>" for t in data["key_takeaways"])
 
-    # Article sections
     sections_html = ""
     for sec in data["sections"]:
         sections_html += f'\n      <h2 id="{sec["id"]}">{sec["heading"]}</h2>\n      {sec["content"]}\n'
 
-    # TOC
     toc_items = "\n".join(
         f'      <li><a href="#{t["anchor"]}">{t["label"]}</a></li>'
         for t in data["toc"]
     )
 
-    # Related articles
     related_html = ""
     for r in data["related"]:
         related_html += f"""
@@ -149,7 +145,6 @@ def build_html(data: dict, author_box: str) -> str:
         <div class="r-title">{r['title']}</div>
       </a>"""
 
-    # Schema.org
     schema = json.dumps({
         "@context": "https://schema.org",
         "@type": "Article",
@@ -265,8 +260,8 @@ WEB_SEARCH_TOOL = {
 
 
 def run_with_tool_loop(client, model, max_tokens, system, messages):
-    """tool_use が返ってくる間ループしてfinal textを返す"""
-    while True:
+    """web_search tool_use ループ。end_turn になるまで繰り返す。"""
+    for _ in range(15):  # 最大15回
         resp = client.messages.create(
             model=model,
             max_tokens=max_tokens,
@@ -275,27 +270,57 @@ def run_with_tool_loop(client, model, max_tokens, system, messages):
             messages=messages,
         )
 
-        # tool_use ブロックがなければ終了
-        tool_uses = [b for b in resp.content if b.type == "tool_use"]
-        if not tool_uses:
-            # テキストブロックを結合して返す
-            return "".join(b.text for b in resp.content if b.type == "text").strip()
+        # テキストのみ・tool_use なし → 完了
+        if resp.stop_reason == "end_turn":
+            texts = [b.text for b in resp.content if hasattr(b, "text")]
+            return "\n".join(texts).strip()
 
-        # tool_use がある場合はアシスタント応答を履歴に追加してループ
-        messages = messages + [
-            {"role": "assistant", "content": resp.content},
+        # tool_use がある場合 → メッセージ履歴に追加して継続
+        # assistant メッセージをシリアライズ可能な形に変換
+        assistant_blocks = []
+        tool_use_ids = []
+        for b in resp.content:
+            if b.type == "text":
+                assistant_blocks.append({"type": "text", "text": b.text})
+            elif b.type == "tool_use":
+                assistant_blocks.append({
+                    "type": "tool_use",
+                    "id": b.id,
+                    "name": b.name,
+                    "input": b.input,
+                })
+                tool_use_ids.append(b.id)
+
+        messages = messages + [{"role": "assistant", "content": assistant_blocks}]
+
+        # tool_result（web_search はサーバー側で処理済み → content 空でOK）
+        tool_results = [
+            {"type": "tool_result", "tool_use_id": tid, "content": ""}
+            for tid in tool_use_ids
         ]
-        # tool_result をまとめて追加
-        tool_results = []
-        for tu in tool_uses:
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": tu.id,
-                "content": "",  # web_search は自動処理されるので空でOK
-            })
-        messages = messages + [
-            {"role": "user", "content": tool_results},
-        ]
+        messages = messages + [{"role": "user", "content": tool_results}]
+
+    raise RuntimeError("tool loop の最大反復回数に達しました")
+
+
+def extract_json(text: str) -> dict:
+    """テキストからJSONオブジェクトを抽出してパースする"""
+    # ```json フェンス除去
+    text = re.sub(r"^```json\s*", "", text.strip())
+    text = re.sub(r"\s*```$", "", text)
+    text = text.strip()
+
+    # 先頭の { を探してJSONを切り出す
+    start = text.find("{")
+    if start == -1:
+        raise ValueError(f"JSONが見つかりません。受信テキスト:\n{text[:500]}")
+    # 末尾の } を探す
+    end = text.rfind("}")
+    if end == -1:
+        raise ValueError(f"JSONの終端が見つかりません。受信テキスト:\n{text[:500]}")
+
+    json_str = text[start:end+1]
+    return json.loads(json_str)
 
 
 # ── メイン処理 ────────────────────────────────────────────
@@ -313,10 +338,12 @@ def generate(topic: str | None = None) -> dict:
         topic = run_with_tool_loop(
             client=client,
             model=MODEL,
-            max_tokens=500,
-            system="You are a crypto content strategist. Always use web_search to check current trends before suggesting a topic.",
+            max_tokens=1000,
+            system="You are a crypto content strategist. Always use web_search to check current trends before suggesting a topic. Reply with ONLY the topic sentence, nothing else.",
             messages=[{"role": "user", "content": topic_prompt}],
         )
+        # 複数行返ってきた場合は最後の行を使う
+        topic = [line.strip() for line in topic.splitlines() if line.strip()][-1]
         print(f"📌 選定トピック: {topic}")
 
     # 記事データをJSON形式で生成（web検索あり）
@@ -328,10 +355,8 @@ Today's date: {today.strftime('%B %d, %Y')}
 Target audience: Everyday Americans curious about crypto, not experts.
 Length: Aim for 5-7 sections, approximately 800-1000 words total content.
 
-IMPORTANT: 
-1. First use web_search to find the latest news, statistics, and regulatory updates related to this topic.
-2. Use the search results to ensure the article contains accurate, up-to-date information.
-3. Then return the article as a JSON object in the required format.
+STEP 1: Use web_search to find the latest news, statistics, and regulatory updates related to this topic.
+STEP 2: Return the article as a single JSON object in the exact format specified. No preamble, no explanation — ONLY the JSON.
 
 Already published slugs (do NOT reuse or create similar content):
 {chr(10).join(f'- {s}' for s in existing_slugs)}"""
@@ -344,10 +369,8 @@ Already published slugs (do NOT reuse or create similar content):
         messages=[{"role": "user", "content": user_prompt}],
     )
 
-    # JSON パース（```json フェンスがついていても対応）
-    raw = re.sub(r"^```json\s*", "", raw)
-    raw = re.sub(r"\s*```$", "", raw)
-    data = json.loads(raw)
+    # JSON パース
+    data = extract_json(raw)
 
     # 重複スラッグチェック
     if data["slug"] in existing_slugs:
