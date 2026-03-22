@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Articles — ChainClarity</title>
+<meta name="description" content="Plain-English explainers on crypto, stablecoins, Bitcoin, DeFi, and blockchain. Browse all ChainClarity articles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .page-hero { padding: 4rem 0 3rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+  .page-hero h1 { font-family: var(--heading-font); font-size: clamp(2rem,5vw,3.2rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
+  .page-hero p { color: #c8ccd4; font-size: 1rem; font-weight: 300; max-width: 480px; }
+
+  .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-btn {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 0.35rem 0.9rem; border-radius: 2rem;
+    border: 1px solid var(--border); background: transparent;
+    color: #c8ccd4; cursor: pointer; transition: all 0.2s; font-family: var(--body-font);
+  }
+  .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #0a0c0f; border-color: var(--accent); }
+
+  .articles-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-bottom: 4rem; }
+  @media(max-width:900px){ .articles-grid{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:580px){ .articles-grid{ grid-template-columns:1fr; } }
+
+  .card-new::after {
+    content: 'NEW';
+    position: absolute; top: 1rem; right: 1rem;
+    font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em;
+    background: var(--accent); color: #0a0c0f;
+    padding: 0.15rem 0.45rem; border-radius: 0.2rem;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul>
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/#topics">Topics</a></li>
+    <li><a href="/#newsletter">Newsletter</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="page-hero fade-in">
+    <p class="section-label">All Articles</p>
+    <h1>Learn crypto,<br>without the jargon.</h1>
+    <p>Clear explainers on stablecoins, Bitcoin, DeFi, blockchain regulation, and the future of money.</p>
+  </div>
+
+  <div class="filter-bar fade-in delay-1">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Stablecoins</button>
+    <button class="filter-btn">Bitcoin</button>
+    <button class="filter-btn">DeFi</button>
+    <button class="filter-btn">RWA</button>
+    <button class="filter-btn">Regulation</button>
+    <button class="filter-btn">Basics</button>
+  </div>
+
+  <div class="articles-grid">
+
+    <a href="/articles/what-is-a-stablecoin.html" class="card card-new fade-in">
+      <span class="card-tag tag-stablecoin">Stablecoins</span>
+      <h2>What Is a Stablecoin? The Beginner's Guide for 2026</h2>
+      <p>USDT, USDC, and the GENIUS Act explained. Here's everything you need to know.</p>
+      <div class="card-meta"><time>March 2026</time> <span>⏱ 6 min</span></div>
+    </a>
+
+    <a href="/articles/bitcoin-etf-explained.html" class="card card-new fade-in delay-1">
+      <span class="card-tag tag-bitcoin">Bitcoin</span>
+      <h2>Bitcoin ETFs Explained: What the $175B Milestone Means for You</h2>
+      <p>Over $175 billion is now in Bitcoin ETFs. Here's why that's a big deal for everyday investors.</p>
+      <div class="card-meta"><time>March 2026</time> <span>⏱ 5 min</span></div>
+    </a>
+
+    <a href="/articles/rwa-tokenization.html" class="card card-new fade-in delay-2">
+      <span class="card-tag tag-rwa">RWA</span>
+      <h2>Tokenized Real-World Assets: The $80B Trend Nobody's Talking About</h2>
+      <p>Real estate, bonds, and private equity are going on-chain. Here's what it means.</p>
+      <div class="card-meta"><time>February 2026</time> <span>⏱ 7 min</span></div>
+    </a>
+
+    <a href="/articles/genius-act-explained.html" class="card fade-in">
+      <span class="card-tag tag-regulation">Regulation</span>
+      <h2>The GENIUS Act: America's First Stablecoin Law, Explained</h2>
+      <p>Congress finally regulated stablecoins. Here's what changed and why it matters to you.</p>
+      <div class="card-meta"><time>February 2026</time> <span>⏱ 5 min</span></div>
+    </a>
+
+    <a href="/articles/what-is-defi.html" class="card fade-in delay-1">
+      <span class="card-tag tag-defi">DeFi</span>
+      <h2>DeFi for Beginners: Lending, Borrowing & Earning Without a Bank</h2>
+      <p>Decentralized finance lets you earn interest without a savings account. But what's the catch?</p>
+      <div class="card-meta"><time>January 2026</time> <span>⏱ 8 min</span></div>
+    </a>
+
+    <a href="/articles/usdc-vs-usdt.html" class="card fade-in delay-2">
+      <span class="card-tag tag-stablecoin">Stablecoins</span>
+      <h2>USDC vs USDT: Which Stablecoin Should You Trust?</h2>
+      <p>Both are pegged to $1, but they're very different under the hood. Here's the honest comparison.</p>
+      <div class="card-meta"><time>January 2026</time> <span>⏱ 5 min</span></div>
+    </a>
+
+    <a href="/articles/what-is-blockchain.html" class="card fade-in">
+      <span class="card-tag tag-basics">Basics</span>
+      <h2>What Is a Blockchain? The Clearest Explanation You'll Find</h2>
+      <p>No technical background needed. We'll explain exactly how blockchain works in plain English.</p>
+      <div class="card-meta"><time>December 2025</time> <span>⏱ 6 min</span></div>
+    </a>
+
+    <a href="/articles/bitcoin-not-just-internet-money.html" class="card fade-in delay-1">
+      <span class="card-tag tag-bitcoin">Bitcoin</span>
+      <h2>Why Bitcoin Isn't Just "Internet Money" Anymore</h2>
+      <p>From corporate treasury reserves to Lightning Network payments — Bitcoin's role is evolving fast.</p>
+      <div class="card-meta"><time>December 2025</time> <span>⏱ 6 min</span></div>
+    </a>
+
+    <a href="/articles/ai-crypto-agents.html" class="card fade-in delay-2">
+      <span class="card-tag tag-defi">DeFi</span>
+      <h2>AI Agents That Spend Crypto: The New Wave of Web3 Apps</h2>
+      <p>The next generation of apps won't call themselves "crypto" — but stablecoins will power them.</p>
+      <div class="card-meta"><time>December 2025</time> <span>⏱ 7 min</span></div>
+    </a>
+
+  </div>
+
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> ChainClarity is an educational blog. Nothing on this site constitutes financial, investment, or legal advice. Cryptocurrency assets are volatile and carry significant risk. Always do your own research before making any financial decisions.
+  </div>
+</div>
+
+<footer class="site-footer">
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul class="footer-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+    <li><a href="/disclaimer.html">Disclaimer</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 ChainClarity. For educational purposes only. Not financial advice.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

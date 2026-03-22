@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainClarity — Crypto & Blockchain Explained</title>
+<meta name="description" content="Clear, honest explainers on crypto, stablecoins, blockchain, and digital finance. No hype, just clarity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #181c22;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaed;
+    --muted: #7a8090;
+    --accent: #00e5a0;
+    --accent2: #5b8fff;
+    --accent3: #ff6b35;
+    --heading-font: 'Syne', sans-serif;
+    --body-font: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: var(--heading-font);
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav ul {
+    display: flex; gap: 2rem; list-style: none;
+  }
+
+  nav a {
+    color: #c8ccd4;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 7rem 2rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(0,229,160,0.08);
+    border: 1px solid rgba(0,229,160,0.2);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: var(--heading-font);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
+
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent);
+    color: #0a0c0f;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.4rem;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .hero-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0.6rem 0;
+  }
+
+  .ticker {
+    display: flex; gap: 3rem;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .ticker-item .name { color: var(--text); font-weight: 600; }
+  .ticker-item .up { color: var(--accent); }
+  .ticker-item .down { color: #ff5555; }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SECTIONS ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  section { padding: 4rem 0; }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: var(--heading-font);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 2.5rem;
+    color: var(--text);
+  }
+
+  /* ── FEATURED CARD ── */
+  .featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 700px) { .featured { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.25s, transform 0.25s, background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,229,160,0.3);
+    transform: translateY(-3px);
+    background: var(--surface2);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-main {
+    grid-column: span 2;
+    display: flex; gap: 2rem; align-items: flex-start;
+  }
+
+  @media (max-width: 700px) { .card-main { grid-column: span 1; flex-direction: column; } }
+
+  .card-main .card-visual {
+    flex-shrink: 0;
+    width: 180px; height: 140px;
+    background: linear-gradient(135deg, rgba(0,229,160,0.12), rgba(91,143,255,0.08));
+    border-radius: 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-stablecoin { background: rgba(0,229,160,0.12); color: var(--accent); }
+  .tag-bitcoin { background: rgba(255,107,53,0.12); color: var(--accent3); }
+  .tag-defi { background: rgba(91,143,255,0.12); color: var(--accent2); }
+  .tag-rwa { background: rgba(255,200,0,0.1); color: #ffc800; }
+  .tag-regulation { background: rgba(200,100,255,0.1); color: #c864ff; }
+
+  .card h2 {
+    font-family: var(--heading-font);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .card-main h2 { font-size: 1.6rem; }
+
+  .card p {
+    font-size: 0.875rem;
+    color: #c8ccd4;
+    line-height: 1.6;
+  }
+
+  .card-meta {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-top: 1.25rem;
+    font-size: 0.75rem;
+    color: #c8ccd4;
+  }
+
+  .card-meta time { color: #c8ccd4; }
+  .card-meta .read-time {
+    display: flex; align-items: center; gap: 0.25rem;
+  }
+
+  /* ── GRID ── */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 580px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 3rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .newsletter::after {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(0,229,160,0.06), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .newsletter h3 {
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+  }
+
+  .newsletter p { color: #c8ccd4; font-size: 0.9rem; }
+
+  .nl-form { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+  .nl-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.65rem 1rem;
+    border-radius: 0.4rem;
+    font-family: var(--body-font);
+    font-size: 0.875rem;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .nl-input:focus { border-color: var(--accent); }
+  .nl-input::placeholder { color: var(--muted); }
+
+  .nl-btn {
+    background: var(--accent);
+    color: #0a0c0f;
+    border: none;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.4rem;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .nl-btn:hover { opacity: 0.85; }
+
+  @media (max-width: 700px) {
+    .newsletter { flex-direction: column; }
+    .nl-form { width: 100%; }
+    .nl-input { flex: 1; width: auto; }
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    background: rgba(255,107,53,0.05);
+    border: 1px solid rgba(255,107,53,0.15);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.78rem;
+    color: #c8ccd4;
+    margin: 2rem 0;
+    line-height: 1.6;
+  }
+
+  .disclaimer strong { color: var(--accent3); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer .logo { font-size: 1rem; }
+
+  .footer-links {
+    display: flex; gap: 1.5rem; list-style: none;
+  }
+
+  .footer-links a {
+    color: #c8ccd4;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: #c8ccd4;
+    width: 100%;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  /* ── FADE IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.35s; }
+  .delay-4 { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul>
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">Crypto &amp; Blockchain Education</div>
+  <h1 class="fade-in">Understand <em>crypto</em><br>without the noise.</h1>
+  <p class="hero-sub fade-in delay-1">Plain-English explainers on stablecoins, Bitcoin, DeFi, and the future of money — written for curious Americans, not traders.</p>
+  <a href="/articles.html" class="hero-cta fade-in delay-2">Browse all articles →</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="name">Bitcoin</span> What is it, really?</span>
+    <span class="ticker-item"><span class="name">Stablecoins</span> The internet's dollar</span>
+    <span class="ticker-item"><span class="name">GENIUS Act</span> New US regulation explained</span>
+    <span class="ticker-item"><span class="name">RWA Tokenization</span> $80B by end of 2026</span>
+    <span class="ticker-item"><span class="name">DeFi</span> Banks without banks</span>
+    <span class="ticker-item"><span class="name">ETF</span> Crypto goes mainstream</span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item"><span class="name">Bitcoin</span> What is it, really?</span>
+    <span class="ticker-item"><span class="name">Stablecoins</span> The internet's dollar</span>
+    <span class="ticker-item"><span class="name">GENIUS Act</span> New US regulation explained</span>
+    <span class="ticker-item"><span class="name">RWA Tokenization</span> $80B by end of 2026</span>
+    <span class="ticker-item"><span class="name">DeFi</span> Banks without banks</span>
+    <span class="ticker-item"><span class="name">ETF</span> Crypto goes mainstream</span>
+  </div>
+</div>
+
+<!-- FEATURED ARTICLES -->
+<section>
+  <div class="container">
+    <p class="section-label">Latest</p>
+    <h2 class="section-title">Featured Articles</h2>
+
+    <div class="featured">
+      <!-- Main featured -->
+      <a href="/articles/what-is-a-stablecoin.html" class="card card-main fade-in">
+        <div class="card-visual">🪙</div>
+        <div>
+          <span class="card-tag tag-stablecoin">Stablecoins</span>
+          <h2>What Is a Stablecoin? The Beginner's Guide for 2026</h2>
+          <p>USDT, USDC, and the new GENIUS Act—stablecoins are becoming the internet's dollar. Here's what every American should know before they become unavoidable.</p>
+          <div class="card-meta">
+            <time>March 2026</time>
+            <span class="read-time">⏱ 6 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Side cards -->
+      <a href="#" class="card fade-in delay-1">
+        <span class="card-tag tag-bitcoin">Bitcoin</span>
+        <h2>Bitcoin ETFs Explained: What the $175B Milestone Means for You</h2>
+        <p>Over $175 billion is now sitting in Bitcoin ETFs. Here's why that's a big deal and what it means for everyday investors.</p>
+        <div class="card-meta">
+          <time>March 2026</time>
+          <span class="read-time">⏱ 5 min read</span>
+        </div>
+      </a>
+
+      <a href="#" class="card fade-in delay-2">
+        <span class="card-tag tag-rwa">RWA</span>
+        <h2>Tokenized Real-World Assets: The $80 Billion Trend Nobody's Talking About</h2>
+        <p>Real estate, bonds, and private equity are being put on the blockchain. Here's what "tokenization" actually means in plain English.</p>
+        <div class="card-meta">
+          <time>February 2026</time>
+          <span class="read-time">⏱ 7 min read</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- More articles grid -->
+    <p class="section-label" id="topics">More Articles</p>
+    <h2 class="section-title">Keep Reading</h2>
+
+    <div class="grid-3">
+      <a href="#" class="card fade-in">
+        <span class="card-tag tag-regulation">Regulation</span>
+        <h2>The GENIUS Act: What America's First Stablecoin Law Means</h2>
+        <p>Congress finally passed stablecoin legislation. Here's what changed and why it matters.</p>
+        <div class="card-meta"><time>February 2026</time> <span>⏱ 5 min</span></div>
+      </a>
+
+      <a href="#" class="card fade-in delay-1">
+        <span class="card-tag tag-defi">DeFi</span>
+        <h2>DeFi for Beginners: Lending, Borrowing, and Earning Without a Bank</h2>
+        <p>Decentralized finance lets you earn interest without a savings account. But what's the catch?</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 8 min</span></div>
+      </a>
+
+      <a href="#" class="card fade-in delay-2">
+        <span class="card-tag tag-bitcoin">Bitcoin</span>
+        <h2>Why Bitcoin Isn't Just "Internet Money" Anymore</h2>
+        <p>From treasury reserves to ETFs to Lightning Network payments — Bitcoin's role is evolving fast.</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 6 min</span></div>
+      </a>
+
+      <a href="#" class="card fade-in">
+        <span class="card-tag tag-stablecoin">Stablecoins</span>
+        <h2>USDC vs USDT: Which Stablecoin Should You Trust?</h2>
+        <p>Both are pegged to the dollar, but they're very different under the hood.</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 5 min</span></div>
+      </a>
+
+      <a href="#" class="card fade-in delay-1">
+        <span class="card-tag tag-rwa">RWA</span>
+        <h2>Can You Really Buy Tokenized US Treasury Bonds?</h2>
+        <p>Yes, and over $7 billion in tokenized Treasuries are already live. Here's how it works.</p>
+        <div class="card-meta"><time>December 2025</time> <span>⏱ 6 min</span></div>
+      </a>
+
+      <a href="#" class="card fade-in delay-2">
+        <span class="card-tag tag-defi">DeFi</span>
+        <h2>AI Agents That Spend Crypto: The New Wave of Web3 Apps</h2>
+        <p>AI and stablecoins are merging. The next generation of apps won't even call themselves "crypto."</p>
+        <div class="card-meta"><time>December 2025</time> <span>⏱ 7 min</span></div>
+      </a>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> ChainClarity is an educational blog. Nothing on this site constitutes financial, investment, or legal advice. Crypto assets are volatile and speculative. Always do your own research before making any financial decisions.
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="container">
+    <div class="newsletter">
+      <div>
+        <h3>Stay in the loop.</h3>
+        <p>Get the latest explainers delivered to your inbox. No spam, no hype.</p>
+      </div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="you@example.com">
+        <button class="nl-btn">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul class="footer-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+    <li><a href="/disclaimer.html">Disclaimer</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 ChainClarity. For educational purposes only. Not financial advice.</p>
+</footer>
+
+</body>
+</html>

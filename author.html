@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Author: Marcus Webb — ChainClarity</title>
+<meta name="description" content="Marcus Webb is a fintech software engineer and independent crypto researcher who has followed digital assets since 2017. He writes plain-English explainers for everyday Americans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+
+<!-- Schema.org Person structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Marcus Webb",
+  "url": "https://chainclarityblog.com/author.html",
+  "description": "Fintech software engineer and independent crypto researcher. Writing plain-English explainers on crypto and blockchain since 2023.",
+  "knowsAbout": [
+    "Cryptocurrency",
+    "Blockchain technology",
+    "Stablecoins",
+    "Decentralized Finance",
+    "Financial technology",
+    "Digital assets"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "ChainClarity",
+    "url": "https://chainclarityblog.com"
+  }
+}
+</script>
+
+<style>
+  .author-wrap { max-width: 760px; margin: 0 auto; padding: 4rem 2rem; }
+
+  .author-hero {
+    display: flex; align-items: flex-start; gap: 2rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+  }
+  @media(max-width:580px){ .author-hero{ flex-direction:column; align-items:center; text-align:center; } }
+
+  .author-avatar-lg {
+    flex-shrink: 0;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0a2a1e, #0d1f35);
+    border: 2px solid rgba(0,229,160,0.25);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  .author-hero h1 {
+    font-family: var(--heading-font);
+    font-size: 2rem; font-weight: 800;
+    letter-spacing: -0.04em; margin-bottom: 0.35rem;
+  }
+
+  .author-title {
+    font-size: 0.85rem; color: var(--accent);
+    font-weight: 600; margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  .author-badges {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;
+  }
+
+  .badge {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.2rem 0.65rem;
+    border-radius: 2rem; border: 1px solid var(--border);
+    color: #c8ccd4;
+  }
+
+  .author-social { display: flex; gap: 0.75rem; }
+  .author-social a {
+    font-size: 0.78rem; color: #c8ccd4;
+    text-decoration: none; transition: color 0.2s;
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+  .author-social a:hover { color: var(--accent); }
+
+  .author-wrap h2 {
+    font-family: var(--heading-font);
+    font-size: 1.2rem; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--text);
+    margin: 2.5rem 0 0.75rem;
+  }
+
+  .author-wrap p {
+    color: #c8ccd4; font-size: 0.975rem;
+    font-weight: 300; line-height: 1.8; margin-bottom: 1.2rem;
+  }
+
+  .timeline {
+    border-left: 2px solid var(--border);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0 2rem;
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+
+  .timeline-item { position: relative; }
+  .timeline-item::before {
+    content: '';
+    position: absolute; left: -1.85rem; top: 0.35rem;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .timeline-year {
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.2rem;
+  }
+
+  .timeline-item p {
+    font-size: 0.875rem; color: #c8ccd4;
+    margin: 0; line-height: 1.6;
+  }
+
+  .expertise-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.75rem; margin: 1rem 0 2rem;
+  }
+  @media(max-width:480px){ .expertise-grid{ grid-template-columns:1fr; } }
+
+  .expertise-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 0.5rem; padding: 0.9rem 1rem;
+    display: flex; align-items: flex-start; gap: 0.65rem;
+  }
+  .expertise-item .ei-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+  .expertise-item .ei-label { font-size: 0.82rem; color: var(--text); font-weight: 500; line-height: 1.4; }
+  .expertise-item .ei-sub { font-size: 0.75rem; color: #c8ccd4; line-height: 1.4; }
+
+  .editorial-box {
+    background: rgba(0,229,160,0.04);
+    border: 1px solid rgba(0,229,160,0.15);
+    border-radius: 0.75rem; padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .editorial-box h3 {
+    font-family: var(--heading-font);
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem;
+  }
+  .editorial-box p { margin: 0; font-size: 0.875rem; color: #c8ccd4; line-height: 1.7; }
+
+  .articles-list { margin: 1rem 0 2rem; }
+  .articles-list a {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; transition: color 0.2s;
+    gap: 1rem;
+  }
+  .articles-list a:last-child { border: none; }
+  .articles-list a:hover .al-title { color: var(--accent); }
+  .al-title { font-size: 0.9rem; color: var(--text); font-weight: 500; line-height: 1.4; }
+  .al-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul>
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/#newsletter">Newsletter</a></li>
+  </ul>
+</nav>
+
+<div class="author-wrap">
+
+  <div class="author-hero fade-in">
+    <!-- SVGアバター（顔写真不要・プライバシー安全） -->
+    <div class="author-avatar-lg">
+      <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="55" cy="55" r="55" fill="url(#grad)"/>
+        <!-- 体 -->
+        <ellipse cx="55" cy="82" rx="22" ry="14" fill="rgba(0,229,160,0.15)"/>
+        <!-- 頭 -->
+        <circle cx="55" cy="42" r="18" fill="rgba(0,229,160,0.2)"/>
+        <!-- 顔のディテール -->
+        <circle cx="49" cy="40" r="2.5" fill="rgba(0,229,160,0.7)"/>
+        <circle cx="61" cy="40" r="2.5" fill="rgba(0,229,160,0.7)"/>
+        <path d="M49 48 Q55 53 61 48" stroke="rgba(0,229,160,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- 装飾ライン -->
+        <circle cx="55" cy="55" r="52" stroke="rgba(0,229,160,0.1)" stroke-width="1"/>
+        <defs>
+          <radialGradient id="grad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#0d2b20"/>
+            <stop offset="100%" stop-color="#080f18"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div>
+      <h1>Marcus Webb</h1>
+      <p class="author-title">Fintech Engineer & Independent Crypto Researcher</p>
+      <div class="author-badges">
+        <span class="badge">Crypto since 2017</span>
+        <span class="badge">Software Engineering</span>
+        <span class="badge">Personal Finance</span>
+      </div>
+      <div class="author-social">
+        <a href="mailto:marcus@chainclarityblog.com">✉ Contact</a>
+        <a href="/about.html">📋 Editorial Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <h2>About Marcus</h2>
+  <p>Marcus Webb spent nearly a decade working in fintech — building payment infrastructure and API integrations for financial software companies. That background gave him an inside view of how money actually moves through the traditional financial system, and why that system has so many friction points that blockchain technology is trying to solve.</p>
+
+  <p>He bought his first Bitcoin in 2017, lost money in the 2018 crash, learned from it, and has been closely following the crypto space ever since — through the NFT boom, the DeFi summer, the FTX collapse, and the institutional wave of 2024–2026. He's not a maximalist for any particular coin or chain. He's interested in which parts of this technology are genuinely useful and which parts are hype.</p>
+
+  <p>ChainClarity is his attempt to write the explainers he wished existed when he was first trying to understand this space: clear, honest, and written for people who aren't already deep in the crypto rabbit hole.</p>
+
+  <h2>Background & Experience</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2017</div>
+      <p>First exposure to Bitcoin and Ethereum while working on a payment API integration. Bought first crypto. Lost a significant amount in the 2018 bear market. Started taking research seriously.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2019–2021</div>
+      <p>Worked on fintech infrastructure projects involving cross-border payments and stablecoin settlement prototypes. Began tracking DeFi protocols and the Ethereum ecosystem professionally.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2022</div>
+      <p>Closely followed the Terra/Luna collapse, Celsius bankruptcy, and FTX implosion. Wrote internal research notes on what went wrong and why — the origin of ChainClarity's focus on honest risk disclosure.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2023–Present</div>
+      <p>Launched ChainClarity as an independent educational blog. Tracks US crypto regulation, institutional adoption, stablecoin developments, and emerging use cases like RWA tokenization and AI agent payments.</p>
+    </div>
+  </div>
+
+  <h2>Areas of Focus</h2>
+  <div class="expertise-grid">
+    <div class="expertise-item">
+      <div class="ei-icon">🪙</div>
+      <div><div class="ei-label">Stablecoins & Payments</div><div class="ei-sub">USDC, USDT, regulation, cross-border use cases</div></div>
+    </div>
+    <div class="expertise-item">
+      <div class="ei-icon">⚖️</div>
+      <div><div class="ei-label">US Crypto Regulation</div><div class="ei-sub">GENIUS Act, SEC policy, OCC developments</div></div>
+    </div>
+    <div class="expertise-item">
+      <div class="ei-icon">🏗️</div>
+      <div><div class="ei-label">DeFi Infrastructure</div><div class="ei-sub">Lending protocols, DEXs, smart contract risk</div></div>
+    </div>
+    <div class="expertise-item">
+      <div class="ei-icon">🏦</div>
+      <div><div class="ei-label">Institutional Adoption</div><div class="ei-sub">ETFs, RWA tokenization, corporate treasury</div></div>
+    </div>
+    <div class="expertise-item">
+      <div class="ei-icon">🤖</div>
+      <div><div class="ei-label">AI × Crypto</div><div class="ei-sub">Agent payments, programmable money, X402</div></div>
+    </div>
+    <div class="expertise-item">
+      <div class="ei-icon">💻</div>
+      <div><div class="ei-label">Fintech Engineering</div><div class="ei-sub">Payment APIs, blockchain infrastructure, settlement</div></div>
+    </div>
+  </div>
+
+  <div class="editorial-box">
+    <h3>Editorial Approach</h3>
+    <p>Every article on ChainClarity is written with three rules: explain it clearly enough that a smart non-expert can understand it, acknowledge the real risks (not just the upside), and never tell anyone what to do with their money. Marcus reviews all content for technical accuracy before publication. When something is uncertain or contested, the article says so.</p>
+  </div>
+
+  <h2>Articles by Marcus</h2>
+  <div class="articles-list">
+    <a href="/articles/what-is-a-stablecoin.html">
+      <span class="al-title">What Is a Stablecoin? The Beginner's Guide for 2026</span>
+      <span class="al-tag tag-stablecoin" style="color:var(--accent)">Stablecoins</span>
+    </a>
+    <a href="/articles/bitcoin-etf-explained.html">
+      <span class="al-title">Bitcoin ETFs Explained: What the $175B Milestone Means for You</span>
+      <span class="al-tag tag-bitcoin" style="color:var(--accent3)">Bitcoin</span>
+    </a>
+    <a href="/articles/genius-act-explained.html">
+      <span class="al-title">The GENIUS Act: America's First Stablecoin Law, Explained</span>
+      <span class="al-tag" style="color:#c864ff">Regulation</span>
+    </a>
+    <a href="/articles/rwa-tokenization.html">
+      <span class="al-title">Tokenized Real-World Assets: The $80B Trend Nobody's Talking About</span>
+      <span class="al-tag" style="color:#ffc800">RWA</span>
+    </a>
+    <a href="/articles/what-is-defi.html">
+      <span class="al-title">DeFi for Beginners: Lending, Borrowing & Earning Without a Bank</span>
+      <span class="al-tag" style="color:var(--accent2)">DeFi</span>
+    </a>
+    <a href="/articles/usdc-vs-usdt.html">
+      <span class="al-title">USDC vs USDT: Which Stablecoin Should You Trust?</span>
+      <span class="al-tag" style="color:var(--accent)">Stablecoins</span>
+    </a>
+    <a href="/articles/what-is-blockchain.html">
+      <span class="al-title">What Is a Blockchain? The Clearest Explanation You'll Find</span>
+      <span class="al-tag" style="color:var(--muted)">Basics</span>
+    </a>
+    <a href="/articles/bitcoin-not-just-internet-money.html">
+      <span class="al-title">Why Bitcoin Isn't Just "Internet Money" Anymore</span>
+      <span class="al-tag" style="color:var(--accent3)">Bitcoin</span>
+    </a>
+    <a href="/articles/ai-crypto-agents.html">
+      <span class="al-title">AI Agents That Spend Crypto: The New Wave of Web3 Apps</span>
+      <span class="al-tag" style="color:var(--accent2)">DeFi</span>
+    </a>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul class="footer-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+    <li><a href="/disclaimer.html">Disclaimer</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 ChainClarity. For educational purposes only. Not financial advice.</p>
+</footer>
+</body>
+</html>
