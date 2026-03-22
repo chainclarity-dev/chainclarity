@@ -2,6 +2,10 @@
 generate_article.py
 Claude API を使って ChainClarity 用の記事 HTML を自動生成する。
 
+改善点:
+  1. web_search ツールでリアルタイム情報を取得
+  2. 既存記事スラッグを渡して重複トピックを防止
+
 使い方:
   python generate_article.py --topic "What is a Bitcoin Halving?"
   python generate_article.py  # トピックを省略するとAIが自動選定
@@ -58,6 +62,7 @@ WRITING RULES:
 - Always include real risks alongside opportunities.
 - Never give financial advice or tell readers to buy anything.
 - Accurate, fact-based, balanced tone.
+- Use web_search to find the latest information, recent news, and accurate statistics before writing. Always search first.
 
 OUTPUT FORMAT — respond with a single JSON object:
 {
@@ -87,14 +92,37 @@ OUTPUT FORMAT — respond with a single JSON object:
 IMPORTANT: Return ONLY the JSON. No markdown fences, no preamble.
 """
 
-TOPIC_PICKER_PROMPT = """You are a crypto content strategist for a US-focused educational blog called ChainClarity.
+def get_existing_slugs() -> list[str]:
+    """articles/ フォルダの既存スラッグ一覧を取得する"""
+    if not os.path.exists(ARTICLES_DIR):
+        return []
+    slugs = []
+    for fname in os.listdir(ARTICLES_DIR):
+        if fname.endswith(".html"):
+            slugs.append(fname.replace(".html", ""))
+    return slugs
+
+
+def build_topic_picker_prompt(existing_slugs: list[str]) -> str:
+    """既存スラッグを含めたトピック選定プロンプトを生成する"""
+    existing_str = "\n".join(f"- {s}" for s in existing_slugs) if existing_slugs else "（なし）"
+    return f"""You are a crypto content strategist for a US-focused educational blog called ChainClarity.
+Today's date is {datetime.date.today().strftime('%B %d, %Y')}.
+
+Use web_search to find what crypto topics are trending RIGHT NOW among US retail investors before suggesting a topic.
+
+The following articles have ALREADY been published — do NOT suggest similar topics:
+{existing_str}
+
 Suggest ONE high-interest, SEO-friendly article topic for 2026 that:
 - Is relevant to US retail investors
-- Has not been covered yet (avoid: stablecoins basics, Bitcoin ETF, GENIUS Act, RWA tokenization, DeFi basics, USDC vs USDT, blockchain basics, Bitcoin treasury, AI crypto agents)
+- Is currently trending or newsworthy (use web search to verify)
+- Has NOT already been covered (see list above)
 - Fits one of these categories: Stablecoins, Bitcoin, DeFi, RWA, Regulation, Basics
 
 Respond with ONLY a plain topic sentence. Example: "What Is a Crypto Wallet and How Do You Keep It Safe?"
 """
+
 
 # ── HTML テンプレート ─────────────────────────────────────
 def build_html(data: dict, author_box: str) -> str:
@@ -229,43 +257,101 @@ def build_html(data: dict, author_box: str) -> str:
 </html>"""
 
 
+# ── web_search ツール定義 ─────────────────────────────────
+WEB_SEARCH_TOOL = {
+    "type": "web_search_20250305",
+    "name": "web_search"
+}
+
+
+def run_with_tool_loop(client, model, max_tokens, system, messages):
+    """tool_use が返ってくる間ループしてfinal textを返す"""
+    while True:
+        resp = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            tools=[WEB_SEARCH_TOOL],
+            messages=messages,
+        )
+
+        # tool_use ブロックがなければ終了
+        tool_uses = [b for b in resp.content if b.type == "tool_use"]
+        if not tool_uses:
+            # テキストブロックを結合して返す
+            return "".join(b.text for b in resp.content if b.type == "text").strip()
+
+        # tool_use がある場合はアシスタント応答を履歴に追加してループ
+        messages = messages + [
+            {"role": "assistant", "content": resp.content},
+        ]
+        # tool_result をまとめて追加
+        tool_results = []
+        for tu in tool_uses:
+            tool_results.append({
+                "type": "tool_result",
+                "tool_use_id": tu.id,
+                "content": "",  # web_search は自動処理されるので空でOK
+            })
+        messages = messages + [
+            {"role": "user", "content": tool_results},
+        ]
+
+
 # ── メイン処理 ────────────────────────────────────────────
 def generate(topic: str | None = None) -> dict:
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    # トピック未指定ならAIに選ばせる
+    # 既存スラッグを取得
+    existing_slugs = get_existing_slugs()
+    print(f"📚 既存記事数: {len(existing_slugs)}")
+
+    # トピック未指定ならAIに選ばせる（重複チェック付き・web検索あり）
     if not topic:
-        print("🤔 トピックを自動選定中...")
-        resp = client.messages.create(
+        print("🔍 最新トレンドを検索してトピックを自動選定中...")
+        topic_prompt = build_topic_picker_prompt(existing_slugs)
+        topic = run_with_tool_loop(
+            client=client,
             model=MODEL,
-            max_tokens=200,
-            messages=[{"role": "user", "content": TOPIC_PICKER_PROMPT}]
+            max_tokens=500,
+            system="You are a crypto content strategist. Always use web_search to check current trends before suggesting a topic.",
+            messages=[{"role": "user", "content": topic_prompt}],
         )
-        topic = resp.content[0].text.strip()
         print(f"📌 選定トピック: {topic}")
 
-    # 記事データをJSON形式で生成
-    print(f"✍️  記事生成中: {topic}")
+    # 記事データをJSON形式で生成（web検索あり）
+    print(f"🔍 最新情報を検索中: {topic}")
     today = datetime.date.today()
     user_prompt = f"""Write a ChainClarity article about: {topic}
 
 Today's date: {today.strftime('%B %d, %Y')}
 Target audience: Everyday Americans curious about crypto, not experts.
-Length: Aim for 5-7 sections, approximately 800-1000 words total content."""
+Length: Aim for 5-7 sections, approximately 800-1000 words total content.
 
-    resp = client.messages.create(
+IMPORTANT: 
+1. First use web_search to find the latest news, statistics, and regulatory updates related to this topic.
+2. Use the search results to ensure the article contains accurate, up-to-date information.
+3. Then return the article as a JSON object in the required format.
+
+Already published slugs (do NOT reuse or create similar content):
+{chr(10).join(f'- {s}' for s in existing_slugs)}"""
+
+    raw = run_with_tool_loop(
+        client=client,
         model=MODEL,
         max_tokens=MAX_TOKENS,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}]
+        messages=[{"role": "user", "content": user_prompt}],
     )
-
-    raw = resp.content[0].text.strip()
 
     # JSON パース（```json フェンスがついていても対応）
     raw = re.sub(r"^```json\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
     data = json.loads(raw)
+
+    # 重複スラッグチェック
+    if data["slug"] in existing_slugs:
+        raise ValueError(f"重複スラッグが生成されました: {data['slug']} — 再実行してください")
 
     # HTML生成
     html = build_html(data, AUTHOR_BOX)
