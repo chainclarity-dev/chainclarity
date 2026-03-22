@@ -1,0 +1,64 @@
+# .github/workflows/weekly.yml
+#
+# 毎週月曜 9:00 AM ET（UTC 14:00）に記事を自動生成・公開する。
+# 手動実行（workflow_dispatch）でも起動できる。
+#
+# GitHub リポジトリの Settings > Secrets and variables > Actions に
+# 以下のシークレットを登録してください:
+#   ANTHROPIC_API_KEY
+#   BUTTONDOWN_API_KEY
+#   GH_PAT  ← リポジトリへのpush権限を持つ Personal Access Token
+
+name: Weekly Article Auto-Publish
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"   # 毎週月曜 14:00 UTC = 9:00 AM ET
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "記事トピック（空白でAI自動選定）"
+        required: false
+        default: ""
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install anthropic requests python-dotenv
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY:   ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:        ${{ secrets.GH_PAT }}
+          GITHUB_OWNER:        ${{ github.repository_owner }}
+          GITHUB_REPO:         ${{ github.event.repository.name }}
+          BUTTONDOWN_API_KEY:  ${{ secrets.BUTTONDOWN_API_KEY }}
+        run: |
+          TOPIC="${{ github.event.inputs.topic }}"
+          if [ -z "$TOPIC" ]; then
+            python run_all.py
+          else
+            python run_all.py --topic "$TOPIC"
+          fi
+
+      - name: Commit generated article
+        run: |
+          git config user.name  "ChainClarity Bot"
+          git config user.email "bot@chainclarityblog.com"
+          git add articles/
+          git diff --staged --quiet || git commit -m "chore: auto-generated article [skip ci]"
+          git push
