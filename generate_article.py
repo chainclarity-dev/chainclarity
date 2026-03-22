@@ -314,13 +314,22 @@ def extract_json(text: str) -> dict:
     start = text.find("{")
     if start == -1:
         raise ValueError(f"JSONが見つかりません。受信テキスト:\n{text[:500]}")
-    # 末尾の } を探す
     end = text.rfind("}")
     if end == -1:
         raise ValueError(f"JSONの終端が見つかりません。受信テキスト:\n{text[:500]}")
 
     json_str = text[start:end+1]
-    return json.loads(json_str)
+
+    # まずそのままパース試行
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+
+    # 失敗した場合：不正な制御文字を除去して再試行
+    # タブ(0x09)・改行(0x0a)・復帰(0x0d)は保持し、それ以外の制御文字を除去
+    cleaned = re.sub(r'(?<!\\)[\x00-\x08\x0b\x0c\x0e-\x1f]', '', json_str)
+    return json.loads(cleaned)
 
 
 # ── メイン処理 ────────────────────────────────────────────
