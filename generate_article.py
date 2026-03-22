@@ -355,28 +355,54 @@ def generate(topic: str | None = None) -> dict:
         topic = [line.strip() for line in topic.splitlines() if line.strip()][-1]
         print(f"📌 選定トピック: {topic}")
 
-    # 記事データをJSON形式で生成（web検索あり）
+    # STEP 1: web検索で最新情報を収集
     print(f"🔍 最新情報を検索中: {topic}")
     today = datetime.date.today()
-    user_prompt = f"""Write a ChainClarity article about: {topic}
+    research_prompt = f"""Search for the latest news, statistics, and regulatory updates about: {topic}
+
+Today's date: {today.strftime('%B %d, %Y')}
+
+Use web_search to find:
+1. Recent news (last 3 months) about this topic
+2. Key statistics or data points
+3. Any regulatory changes or developments in the US
+
+Summarize the key findings in plain text. Do NOT write the article yet — just summarize what you found."""
+
+    research = run_with_tool_loop(
+        client=client,
+        model=MODEL,
+        max_tokens=2000,
+        system="You are a crypto researcher. Use web_search to find current information and summarize your findings clearly.",
+        messages=[{"role": "user", "content": research_prompt}],
+    )
+    print(f"📋 リサーチ完了（{len(research)}文字）")
+
+    # STEP 2: リサーチ結果を使ってJSON記事を生成（web検索なし）
+    print(f"✍️  記事生成中...")
+    article_prompt = f"""Write a ChainClarity article about: {topic}
 
 Today's date: {today.strftime('%B %d, %Y')}
 Target audience: Everyday Americans curious about crypto, not experts.
 Length: Aim for 5-7 sections, approximately 800-1000 words total content.
 
-STEP 1: Use web_search to find the latest news, statistics, and regulatory updates related to this topic.
-STEP 2: Return the article as a single JSON object in the exact format specified. No preamble, no explanation — ONLY the JSON.
+RESEARCH FINDINGS (use this information in the article):
+{research}
 
 Already published slugs (do NOT reuse or create similar content):
-{chr(10).join(f'- {s}' for s in existing_slugs)}"""
+{chr(10).join(f'- {s}' for s in existing_slugs)}
 
-    raw = run_with_tool_loop(
-        client=client,
+Return ONLY a valid JSON object. No markdown, no preamble, no text before or after the JSON.
+All string values in the JSON must be properly escaped (use HTML entities for quotes in HTML content).
+Do not use raw double quotes inside JSON string values — use &quot; instead."""
+
+    resp = client.messages.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
+        messages=[{"role": "user", "content": article_prompt}],
     )
+    raw = resp.content[0].text.strip()
 
     # JSON パース
     data = extract_json(raw)
