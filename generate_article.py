@@ -20,7 +20,7 @@ import anthropic
 
 # ── 設定 ────────────────────────────────────────────────
 ARTICLES_DIR = "./articles"          # 生成したHTMLを保存するフォルダ
-MODEL        = "claude-opus-4-6"     # 使用モデル
+MODEL        = "claude-sonnet-4-6"     # 使用モデル
 MAX_TOKENS   = 8000
 
 # 著者ボックス HTML（全記事共通）
