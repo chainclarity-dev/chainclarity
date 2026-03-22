@@ -260,8 +260,9 @@ WEB_SEARCH_TOOL = {
 
 
 def run_with_tool_loop(client, model, max_tokens, system, messages):
-    """web_search tool_use ループ。end_turn になるまで繰り返す。"""
-    for _ in range(15):  # 最大15回
+    """web_search はAnthropicサーバーサイドで処理される。
+    stop_reason が end_turn になるまでループする。"""
+    for _ in range(15):
         resp = client.messages.create(
             model=model,
             max_tokens=max_tokens,
@@ -270,35 +271,46 @@ def run_with_tool_loop(client, model, max_tokens, system, messages):
             messages=messages,
         )
 
-        # テキストのみ・tool_use なし → 完了
+        # end_turn で完了
         if resp.stop_reason == "end_turn":
-            texts = [b.text for b in resp.content if hasattr(b, "text")]
+            texts = [b.text for b in resp.content if hasattr(b, "text") and b.type == "text"]
             return "\n".join(texts).strip()
 
-        # tool_use がある場合 → メッセージ履歴に追加して継続
-        # assistant メッセージをシリアライズ可能な形に変換
-        assistant_blocks = []
-        tool_use_ids = []
+        # tool_use の場合、レスポンス全体をassistantとして追加
+        # web_search の tool_result はAPIが自動生成するため
+        # content ブロックをそのままシリアライズして次のリクエストに渡す
+        assistant_content = []
+        has_tool_use = False
         for b in resp.content:
             if b.type == "text":
-                assistant_blocks.append({"type": "text", "text": b.text})
+                assistant_content.append({"type": "text", "text": b.text})
             elif b.type == "tool_use":
-                assistant_blocks.append({
+                has_tool_use = True
+                assistant_content.append({
                     "type": "tool_use",
                     "id": b.id,
                     "name": b.name,
                     "input": b.input,
                 })
-                tool_use_ids.append(b.id)
+            elif b.type == "tool_result":
+                # tool_result がすでに含まれている場合はそのまま追加
+                result_content = []
+                if hasattr(b, "content") and b.content:
+                    for c in b.content:
+                        if hasattr(c, "text"):
+                            result_content.append({"type": "text", "text": c.text})
+                assistant_content.append({
+                    "type": "tool_result",
+                    "tool_use_id": b.tool_use_id if hasattr(b, "tool_use_id") else "",
+                    "content": result_content,
+                })
 
-        messages = messages + [{"role": "assistant", "content": assistant_blocks}]
+        if not has_tool_use:
+            # tool_use がないのに end_turn でもない場合は終了
+            texts = [b["text"] for b in assistant_content if b.get("type") == "text"]
+            return "\n".join(texts).strip()
 
-        # tool_result（web_search はサーバー側で処理済み → content 空でOK）
-        tool_results = [
-            {"type": "tool_result", "tool_use_id": tid, "content": ""}
-            for tid in tool_use_ids
-        ]
-        messages = messages + [{"role": "user", "content": tool_results}]
+        messages = messages + [{"role": "assistant", "content": assistant_content}]
 
     raise RuntimeError("tool loop の最大反復回数に達しました")
 
