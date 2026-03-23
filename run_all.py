@@ -28,7 +28,7 @@ except ImportError:
     pass
 
 from generate_article import generate
-from publish import github_push, github_update_articles_list, buttondown_send
+from publish import github_push, github_update_articles_list, github_update_sitemap, buttondown_send
 
 
 def run(topic=None, send_newsletter=True):
@@ -69,13 +69,17 @@ def run(topic=None, send_newsletter=True):
         slug, title, description, tag, tag_class, date, read_time
     )
 
-    # STEP 4: Buttondown メルマガ配信
+    # STEP 4: sitemap.xml 自動更新
+    print("\n🗺️  STEP 4: sitemap.xml 自動更新")
+    sitemap_ok = github_update_sitemap(slug)
+
+    # STEP 5: Buttondown メルマガ配信
     if send_newsletter:
-        print("\n📧 STEP 4: Buttondown メルマガ配信")
+        print("\n📧 STEP 5: Buttondown メルマガ配信")
         bd_ok = buttondown_send(slug, title, description, tag)
     else:
         bd_ok = True
-        print("\n📧 STEP 4: メルマガ配信スキップ")
+        print("\n📧 STEP 5: メルマガ配信スキップ")
 
     # 完了サマリー
     print("\n" + "=" * 50)
@@ -83,9 +87,10 @@ def run(topic=None, send_newsletter=True):
     print("=" * 50)
     print(f"  記事タイトル      : {title}")
     print(f"  ファイル          : {filepath}")
-    print(f"  GitHub push       : {'✅' if github_ok else '⚠️  環境変数未設定 / 失敗'}")
-    print(f"  articles.html更新 : {'✅' if list_ok   else '⚠️  環境変数未設定 / 失敗'}")
-    print(f"  メルマガ          : {'✅' if bd_ok     else '⚠️  環境変数未設定 / 失敗'}")
+    print(f"  GitHub push       : {'✅' if github_ok   else '⚠️  環境変数未設定 / 失敗'}")
+    print(f"  articles.html更新 : {'✅' if list_ok     else '⚠️  環境変数未設定 / 失敗'}")
+    print(f"  sitemap.xml更新   : {'✅' if sitemap_ok  else '⚠️  環境変数未設定 / 失敗'}")
+    print(f"  メルマガ          : {'✅' if bd_ok       else '⚠️  環境変数未設定 / 失敗'}")
     print(f"\n  🌐 公開URL:")
     print(f"  https://chainclarityblog.com/articles/{slug}.html")
     print("=" * 50)
