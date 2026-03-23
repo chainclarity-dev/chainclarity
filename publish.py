@@ -92,6 +92,51 @@ def github_update_articles_list(slug, title, description, tag, tag_class, date, 
     return False
 
 
+def github_update_sitemap(slug):
+    """sitemap.xml に新記事URLを追加してGitHubにpushする"""
+    if not all([GH_TOKEN, GH_OWNER, GH_REPO]):
+        print("⚠️  GitHub環境変数が未設定。sitemap更新をスキップします。")
+        return False
+    url = f"{GH_API}/repos/{GH_OWNER}/{GH_REPO}/contents/sitemap.xml"
+    headers = {
+        "Authorization": f"Bearer {GH_TOKEN}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    resp = requests.get(url, headers=headers)
+    if resp.status_code != 200:
+        print(f"❌ sitemap.xml 取得失敗: {resp.status_code}")
+        return False
+    sha = resp.json().get("sha")
+    current = base64.b64decode(resp.json().get("content", "")).decode("utf-8")
+
+    article_url = f"https://chainclarityblog.com/articles/{slug}.html"
+    # すでに存在する場合はスキップ
+    if article_url in current:
+        print("⏭️  sitemap.xml にすでに存在します。スキップ。")
+        return True
+
+    new_entry = f"""  <url>
+    <loc>{article_url}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+"""
+    updated = current.replace("</urlset>", new_entry + "</urlset>")
+    encoded = base64.b64encode(updated.encode("utf-8")).decode("utf-8")
+    today = datetime.date.today().isoformat()
+    payload = {
+        "message": f"feat: update sitemap with {slug} [{today}]",
+        "content": encoded, "sha": sha, "branch": "main",
+    }
+    resp = requests.put(url, headers=headers, json=payload)
+    if resp.status_code in (200, 201):
+        print(f"✅ sitemap.xml 自動更新完了")
+        return True
+    print(f"❌ sitemap.xml 更新失敗: {resp.status_code} {resp.text}")
+    return False
+
+
 def buttondown_send(slug, title, description, tag):
     if not BD_API_KEY:
         print("⚠️  BUTTONDOWN_API_KEY が未設定。メルマガ送信をスキップします。")
@@ -139,11 +184,12 @@ if __name__ == "__main__":
         print(f"❌ ファイルが見つかりません: {filepath}")
         sys.exit(1)
 
-    github_ok = github_push(filepath, args.slug)
-    list_ok   = github_update_articles_list(
+    github_ok  = github_push(filepath, args.slug)
+    list_ok    = github_update_articles_list(
         args.slug, args.title, args.description,
         args.tag, args.tag_class, args.date, args.read_time
     )
+    sitemap_ok = github_update_sitemap(args.slug)
     bd_ok = True
     if not args.no_newsletter:
         bd_ok = buttondown_send(args.slug, args.title, args.description, args.tag)
@@ -151,6 +197,7 @@ if __name__ == "__main__":
         print("⏭️  メルマガ送信スキップ")
 
     print("\n── 完了サマリー ──")
-    print(f"  GitHub push       : {'✅' if github_ok else '⚠️ スキップ/失敗'}")
-    print(f"  articles.html更新 : {'✅' if list_ok   else '⚠️ スキップ/失敗'}")
-    print(f"  Buttondown        : {'✅' if bd_ok     else '⚠️ スキップ/失敗'}")
+    print(f"  GitHub push       : {'✅' if github_ok    else '⚠️ スキップ/失敗'}")
+    print(f"  articles.html更新 : {'✅' if list_ok      else '⚠️ スキップ/失敗'}")
+    print(f"  sitemap.xml更新   : {'✅' if sitemap_ok   else '⚠️ スキップ/失敗'}")
+    print(f"  Buttondown        : {'✅' if bd_ok         else '⚠️ スキップ/失敗'}")
