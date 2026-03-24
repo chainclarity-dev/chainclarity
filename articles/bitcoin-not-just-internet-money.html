@@ -149,8 +149,10 @@
   <div class="sidebar-card nl-sidebar" style="background:rgba(0,229,160,0.04);border-color:rgba(0,229,160,0.15);">
     <h4 style="color:var(--accent)">Newsletter</h4>
     <p>Get clear crypto explainers in your inbox. No spam.</p>
-    <input type="email" placeholder="your@email.com">
-    <button>Subscribe</button>
+    <form action="https://buttondown.com/api/emails/embed-subscribe/clarity-brief" method="post" target="_blank" style="display:flex;flex-direction:column;gap:0.5rem;">
+      <input type="email" name="email" placeholder="your@email.com" required>
+      <button type="submit">Subscribe</button>
+    </form>
   </div>
 </aside>
 </div>
@@ -162,4 +164,5 @@
 </footer>
 </body>
 </html>
+
 
