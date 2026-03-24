@@ -39,9 +39,9 @@ jobs:
         run: |
           TOPIC="${{ github.event.inputs.topic }}"
           if [ -z "$TOPIC" ]; then
-            python run_all.py --no-newsletter
+            python run_all.py
           else
-            python run_all.py --topic "$TOPIC" --no-newsletter
+            python run_all.py --topic "$TOPIC"
           fi
 
       - name: Commit generated article
