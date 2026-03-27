@@ -94,7 +94,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
     <loc>https://chainclarityblog.com/articles/clarity-act-explained-2026.html</loc>
     <changefreq>monthly</changefreq>
@@ -102,6 +101,51 @@
   </url>
   <url>
     <loc>https://chainclarityblog.com/articles/us-strategic-bitcoin-reserve-explained.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/can-you-earn-yield-on-stablecoins.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/digital-commodity-sec-cftc-rules-explained.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/institutional-defi-banks-2026.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/stablecoins-cross-border-payments.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/tokenized-securities-sec-rules-2026.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/us-banks-crypto-2026.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/what-is-a-blockchain-explorer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/what-is-a-crypto-wallet.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chainclarityblog.com/articles/what-is-aave.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
