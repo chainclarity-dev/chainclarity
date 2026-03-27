@@ -65,7 +65,7 @@ def github_update_articles_list(slug, title, description, tag, tag_class, date, 
     current = base64.b64decode(resp.json().get("content", "")).decode("utf-8")
 
     new_card = f"""
-    <a href="/articles/{slug}.html" class="card card-new fade-in">
+    <a href="/articles/{slug}.html" class="card card-new fade-in" data-tag="{tag}">
       <span class="card-tag {tag_class}">{tag}</span>
       <h2>{title}</h2>
       <p>{description}</p>
