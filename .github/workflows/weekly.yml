@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "ChainClarity Bot"
           git config user.email "bot@chainclarityblog.com"
-          git add articles/ articles.html
+          git add -A
           git commit -m "chore: auto-generated article [skip ci]" || echo "Nothing to commit"
-          git pull --rebase origin main
+          git pull --rebase origin main || git rebase --abort
           git push
