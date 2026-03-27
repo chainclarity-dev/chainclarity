@@ -1,5 +1,4 @@
 name: Weekly Article Auto-Publish
-
 on:
   schedule:
     - cron: "0 14 * * 1"
@@ -14,7 +13,6 @@ jobs:
   generate-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,11 +29,11 @@ jobs:
 
       - name: Run pipeline
         env:
-          ANTHROPIC_API_KEY:   ${{ secrets.ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN:        ${{ secrets.GH_PAT }}
-          GITHUB_OWNER:        ${{ github.repository_owner }}
-          GITHUB_REPO:         ${{ github.event.repository.name }}
-          BUTTONDOWN_API_KEY:  ${{ secrets.BUTTONDOWN_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
         run: |
           TOPIC="${{ github.event.inputs.topic }}"
           if [ -z "$TOPIC" ]; then
@@ -48,7 +46,7 @@ jobs:
         run: |
           git config user.name "ChainClarity Bot"
           git config user.email "bot@chainclarityblog.com"
-          git add .
+          git add articles/ articles.html
           git commit -m "chore: auto-generated article [skip ci]" || echo "Nothing to commit"
           git pull --rebase origin main
           git push
