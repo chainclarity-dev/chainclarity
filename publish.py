@@ -16,6 +16,20 @@ GH_API   = "https://api.github.com"
 BD_API_KEY = os.environ.get("BUTTONDOWN_API_KEY", "")
 BD_API     = "https://api.buttondown.email/v1"
 
+# Tag name → CSS class mapping
+TAG_CLASS_MAP = {
+    "regulation":  "tag-regulation",
+    "basics":      "tag-basics",
+    "bitcoin":     "tag-bitcoin",
+    "stablecoins": "tag-stablecoin",
+    "defi":        "tag-defi",
+    "rwa":         "tag-rwa",
+}
+
+def tag_to_class(tag):
+    """Convert tag name to CSS class"""
+    return TAG_CLASS_MAP.get(tag.lower().strip(), "tag-basics")
+
 
 def github_push(filepath, slug):
     if not all([GH_TOKEN, GH_OWNER, GH_REPO]):
@@ -47,7 +61,7 @@ def github_push(filepath, slug):
     return False
 
 
-def github_update_articles_list(slug, title, description, tag, tag_class, date, read_time):
+def github_update_articles_list(slug, title, description, tag, date, read_time):
     if not all([GH_TOKEN, GH_OWNER, GH_REPO]):
         print("⚠️  GitHub環境変数が未設定。articles.html更新をスキップします。")
         return False
@@ -66,10 +80,10 @@ def github_update_articles_list(slug, title, description, tag, tag_class, date, 
 
     new_card = f"""
     <a href="/articles/{slug}.html" class="card card-new fade-in" data-tag="{tag}">
-      <span class="card-tag {tag_class}">{tag}</span>
+      <span class="card-tag {tag_to_class(tag)}">{tag}</span>
       <h2>{title}</h2>
       <p>{description}</p>
-      <div class="card-meta"><time>{date}</time> <span>⏱ {read_time}</span></div>
+      <div class="card-meta"><time>{date}</time> <span>🕐{read_time}</span></div>
     </a>
 """
     current = current.replace("card card-new fade-in", "card fade-in")
@@ -173,7 +187,6 @@ if __name__ == "__main__":
     parser.add_argument("--title",         required=True)
     parser.add_argument("--description",   required=True)
     parser.add_argument("--tag",           required=True)
-    parser.add_argument("--tag-class",     default="tag-basics")
     parser.add_argument("--date",          default=datetime.date.today().strftime("%B %Y"))
     parser.add_argument("--read-time",     default="6 min")
     parser.add_argument("--no-newsletter", action="store_true")
@@ -187,7 +200,7 @@ if __name__ == "__main__":
     github_ok  = github_push(filepath, args.slug)
     list_ok    = github_update_articles_list(
         args.slug, args.title, args.description,
-        args.tag, args.tag_class, args.date, args.read_time
+        args.tag, args.date, args.read_time
     )
     sitemap_ok = github_update_sitemap(args.slug)
     bd_ok = True
