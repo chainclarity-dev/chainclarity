@@ -1,842 +1,644 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trader's Journal — FX Strategy Analyzer</title>
-  <meta name="description" content="In-depth articles on trading strategy analysis, EA evaluation, backtesting, and geopolitical risk in FX markets.">
-  <link rel="canonical" href="https://fxstrategyanalyzer.com/en/blog/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f5f2ed;
-      --surface: #ffffff;
-      --surface2: #ede9e2;
-      --border: #ddd9d2;
-      --ink: #171410;
-      --ink-soft: #4a4540;
-      --ink-muted: #9a9288;
-      --navy: #12213a;
-      --red: #b5271a;
-      --red-dim: rgba(181,39,26,0.07);
-      --gold: #c9900c;
-      --teal: #0e7a6e;
-      --teal-dim: rgba(14,122,110,0.08);
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainClarity — Crypto & Blockchain Explained</title>
+<meta name="description" content="Clear, honest explainers on crypto, stablecoins, blockchain, and digital finance. No hype, just clarity.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #181c22;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaed;
+    --muted: #7a8090;
+    --accent: #00e5a0;
+    --accent2: #5b8fff;
+    --accent3: #ff6b35;
+    --heading-font: 'Syne', sans-serif;
+    --body-font: 'DM Sans', sans-serif;
+  }
 
-    /* ── Site Header ── */
-    .site-header {
-      background: var(--navy);
-      padding: 0 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .site-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      text-decoration: none;
-      letter-spacing: 0.01em;
-    }
-    .site-nav { display: flex; gap: 28px; }
-    .site-nav a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color 0.15s; }
-    .site-nav a:hover, .site-nav a.active { color: #fff; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── Page Header ── */
-    .page-header {
-      background: var(--navy);
-      padding: 48px 40px 0;
-      border-bottom: 3px solid var(--red);
-    }
-    .page-header-inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding-bottom: 24px;
-      gap: 24px;
-    }
-    .page-title-area .section-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 8px;
-    }
-    .page-title-area h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-    }
-    .page-title-area .subtitle {
-      color: rgba(255,255,255,0.45);
-      font-size: 0.9rem;
-      font-weight: 300;
-      margin-top: 8px;
-      font-style: italic;
-    }
+  html { scroll-behavior: smooth; }
 
-    /* Search box */
-    .search-wrap { flex-shrink: 0; }
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      padding: 10px 16px;
-      gap: 10px;
-      width: 260px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .search-box:focus-within {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.35);
-    }
-    .search-box svg { flex-shrink: 0; opacity: 0.45; }
-    .search-box input {
-      background: none;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 300;
-      width: 100%;
-    }
-    .search-box input::placeholder { color: rgba(255,255,255,0.35); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
 
-    /* ── Category Bar ── */
-    .category-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 40px;
-      position: sticky;
-      top: 56px;
-      z-index: 90;
-    }
-    .category-bar-inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .category-bar-inner::-webkit-scrollbar { display: none; }
-    .cat-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--ink-muted);
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: color 0.15s, border-color 0.15s;
-      font-family: 'Barlow', sans-serif;
-      text-transform: uppercase;
-    }
-    .cat-btn:hover { color: var(--ink); }
-    .cat-btn.active { color: var(--ink); border-bottom-color: var(--red); }
-    .cat-badge {
-      background: var(--surface2);
-      color: var(--ink-muted);
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 100px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .cat-btn.active .cat-badge {
-      background: var(--red);
-      color: #fff;
-    }
-    .no-results {
-      display: none;
-      max-width: 1160px;
-      margin: 60px auto;
-      padding: 0 40px;
-      text-align: center;
-      color: var(--ink-muted);
-      font-style: italic;
-      font-size: 1rem;
-    }
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
 
-    /* ── Main Layout ── */
-    .main { max-width: 1160px; margin: 0 auto; padding: 48px 40px 80px; }
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
 
-    /* ── Hero Article ── */
-    .hero-article {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 0;
-      background: var(--navy);
-      margin-bottom: 40px;
-      overflow: hidden;
-      transition: opacity 0.2s;
-    }
-    .hero-article:hover .hero-text { background: #1a2e50; }
-    .hero-text {
-      padding: 44px 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: background 0.2s;
-    }
-    .hero-text .cat-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--red);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      width: fit-content;
-      margin-bottom: 20px;
-    }
-    .hero-text h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.15;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-    .hero-text .excerpt {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      font-weight: 300;
-      font-style: italic;
-      flex: 1;
-      margin-bottom: 28px;
-    }
-    .hero-text .read-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-      padding-bottom: 2px;
-      transition: border-color 0.15s;
-      width: fit-content;
-    }
-    .hero-text .read-link:hover { border-color: #fff; }
-    .hero-visual {
-      background: linear-gradient(135deg, #1a3060 0%, #0a1830 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      min-height: 300px;
-    }
-    .hero-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 20px,
-        rgba(255,255,255,0.02) 20px,
-        rgba(255,255,255,0.02) 21px
-      );
-    }
-    .hero-visual-icon {
-      font-size: 6rem;
-      opacity: 0.15;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-visual-label {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
-    }
+  .logo {
+    font-family: var(--heading-font);
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    text-decoration: none;
+  }
 
-    /* ── Magazine Grid ── */
-    .grid-section-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .grid-section-label span { color: var(--red); }
+  .logo span { color: var(--accent); }
 
-    .magazine-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      margin-bottom: 1px;
-    }
-    .magazine-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+  nav ul {
+    display: flex; gap: 2rem; list-style: none;
+  }
 
-    .article-card {
-      background: var(--surface);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: background 0.15s;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-    }
-    .article-card:hover { background: var(--surface2); }
+  nav a {
+    color: #c8ccd4;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
 
-    .card-cat {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card-cat.ea { color: var(--teal); }
-    .card-cat.geo { color: var(--gold); }
-    .card-cat.regime { color: #7c3aed; }
-    .card-cat.ea::before { content: ''; width: 6px; height: 6px; background: var(--teal); border-radius: 50%; }
-    .card-cat.geo::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
-    .card-cat.regime::before { content: ''; width: 6px; height: 6px; background: #7c3aed; border-radius: 50%; }
-    .card-cat.econ { color: var(--red); }
-    .card-cat.econ::before { content: ''; width: 6px; height: 6px; background: var(--red); border-radius: 50%; }
+  nav a:hover { color: var(--text); }
 
-    .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.3;
-      flex: 1;
-    }
-    .article-card.large .card-title { font-size: 1.4rem; }
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 7rem 2rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
 
-    .card-excerpt {
-      font-size: 0.84rem;
-      color: var(--ink-soft);
-      font-weight: 300;
-      line-height: 1.6;
-      font-style: italic;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .article-card.large .card-excerpt { -webkit-line-clamp: 3; }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+  }
 
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      margin-top: auto;
-    }
-    .card-read {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: color 0.15s;
-    }
-    .article-card:hover .card-read { color: var(--red); }
-    .card-num {
-      font-size: 0.68rem;
-      color: var(--ink-muted);
-      font-weight: 300;
-    }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(0,229,160,0.08);
+    border: 1px solid rgba(0,229,160,0.2);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
 
-    /* Section separator */
-    .section-sep {
-      border: none;
-      border-top: 2px solid var(--border);
-      margin: 48px 0 40px;
-    }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
 
-    /* Hidden state */
-    .article-card[data-hidden="true"],
-    .hero-article[data-hidden="true"] { display: none; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
 
-    /* ── Footer ── */
-    .site-footer {
-      background: var(--navy);
-      padding: 32px 40px;
-      text-align: center;
-    }
-    .site-footer p {
-      color: rgba(255,255,255,0.3);
-      font-size: 0.8rem;
-      font-weight: 300;
-    }
-    .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-    .site-footer a:hover { color: #fff; }
+  h1 {
+    font-family: var(--heading-font);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
 
-    @media(max-width: 900px) {
-      .hero-article { grid-template-columns: 1fr; }
-      .hero-visual { display: none; }
-      .magazine-grid { grid-template-columns: 1fr 1fr; }
-      .page-header-inner { flex-direction: column; align-items: flex-start; }
-      .search-box { width: 100%; }
-    }
-    @media(max-width: 600px) {
-      .site-header { padding: 0 20px; }
-      .page-header { padding: 36px 20px 0; }
-      .main { padding: 32px 20px 60px; }
-      .category-bar { padding: 0 20px; }
-      .magazine-grid { grid-template-columns: 1fr; }
-      .hero-text { padding: 28px; }
-      .hero-text h2 { font-size: 1.5rem; }
-    }
-  </style>
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent);
+    color: #0a0c0f;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.4rem;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .hero-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0.6rem 0;
+  }
+
+  .ticker {
+    display: flex; gap: 3rem;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .ticker-item .name { color: var(--text); font-weight: 600; }
+  .ticker-item .up { color: var(--accent); }
+  .ticker-item .down { color: #ff5555; }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SECTIONS ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  section { padding: 4rem 0; }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: var(--heading-font);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 2.5rem;
+    color: var(--text);
+  }
+
+  /* ── FEATURED CARD ── */
+  .featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 700px) { .featured { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.25s, transform 0.25s, background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,229,160,0.3);
+    transform: translateY(-3px);
+    background: var(--surface2);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-main {
+    grid-column: span 2;
+    display: flex; gap: 2rem; align-items: flex-start;
+  }
+
+  @media (max-width: 700px) { .card-main { grid-column: span 1; flex-direction: column; } }
+
+  .card-main .card-visual {
+    flex-shrink: 0;
+    width: 180px; height: 140px;
+    background: linear-gradient(135deg, rgba(0,229,160,0.12), rgba(91,143,255,0.08));
+    border-radius: 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-stablecoin { background: rgba(0,229,160,0.12); color: var(--accent); }
+  .tag-bitcoin { background: rgba(255,107,53,0.12); color: var(--accent3); }
+  .tag-defi { background: rgba(91,143,255,0.12); color: var(--accent2); }
+  .tag-rwa { background: rgba(255,200,0,0.1); color: #ffc800; }
+  .tag-regulation { background: rgba(200,100,255,0.1); color: #c864ff; }
+
+  .card h2 {
+    font-family: var(--heading-font);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .card-main h2 { font-size: 1.6rem; }
+
+  .card p {
+    font-size: 0.875rem;
+    color: #c8ccd4;
+    line-height: 1.6;
+  }
+
+  .card-meta {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-top: 1.25rem;
+    font-size: 0.75rem;
+    color: #c8ccd4;
+  }
+
+  .card-meta time { color: #c8ccd4; }
+  .card-meta .read-time {
+    display: flex; align-items: center; gap: 0.25rem;
+  }
+
+  /* ── GRID ── */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 580px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 3rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .newsletter::after {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(0,229,160,0.06), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .newsletter h3 {
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+  }
+
+  .newsletter p { color: #c8ccd4; font-size: 0.9rem; }
+
+  .nl-form { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+  .nl-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.65rem 1rem;
+    border-radius: 0.4rem;
+    font-family: var(--body-font);
+    font-size: 0.875rem;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .nl-input:focus { border-color: var(--accent); }
+  .nl-input::placeholder { color: var(--muted); }
+
+  .nl-btn {
+    background: var(--accent);
+    color: #0a0c0f;
+    border: none;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.4rem;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .nl-btn:hover { opacity: 0.85; }
+
+  @media (max-width: 700px) {
+    .newsletter { flex-direction: column; }
+    .nl-form { width: 100%; }
+    .nl-input { flex: 1; width: auto; }
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    background: rgba(255,107,53,0.05);
+    border: 1px solid rgba(255,107,53,0.15);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.78rem;
+    color: #c8ccd4;
+    margin: 2rem 0;
+    line-height: 1.6;
+  }
+
+  .disclaimer strong { color: var(--accent3); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer .logo { font-size: 1rem; }
+
+  .footer-links {
+    display: flex; gap: 1.5rem; list-style: none;
+  }
+
+  .footer-links a {
+    color: #c8ccd4;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: #c8ccd4;
+    width: 100%;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  /* ── FADE IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.35s; }
+  .delay-4 { animation-delay: 0.5s; }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4486857211163347" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="https://fxstrategyanalyzer.com/en/" class="site-logo">FX Strategy Analyzer</a>
-    <nav class="site-nav">
-      <a href="https://fxstrategyanalyzer.com/en/">Tools</a>
-      <a href="https://fxstrategyanalyzer.com/en/blog/" class="active">Blog</a>
-      <a href="https://fxstrategyanalyzer.com/en/about/">About</a>
-    </nav>
-  </header>
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul>
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+  </ul>
+</nav>
 
-  <div class="page-header">
-    <div class="page-header-inner">
-      <div class="page-title-area">
-        <div class="section-label">FX Strategy Analyzer</div>
-        <h1>Trader's Journal</h1>
-        <p class="subtitle">Strategy analysis, backtesting, and geopolitical risk — for serious FX traders.</p>
-      </div>
-      <div class="search-wrap">
-        <div class="search-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" id="searchInput" placeholder="Search articles…" autocomplete="off">
-        </div>
-      </div>
-    </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">Crypto &amp; Blockchain Education</div>
+  <h1 class="fade-in">Understand <em>crypto</em><br>without the noise.</h1>
+  <p class="hero-sub fade-in delay-1">For traders and investors who want to understand how crypto actually works.</p>
+  <a href="/articles.html" class="hero-cta fade-in delay-2">Browse all articles →</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="name">Bitcoin</span> What is it, really?</span>
+    <span class="ticker-item"><span class="name">Stablecoins</span> The internet's dollar</span>
+    <span class="ticker-item"><span class="name">GENIUS Act</span> New US regulation explained</span>
+    <span class="ticker-item"><span class="name">RWA Tokenization</span> $80B by end of 2026</span>
+    <span class="ticker-item"><span class="name">DeFi</span> Banks without banks</span>
+    <span class="ticker-item"><span class="name">ETF</span> Crypto goes mainstream</span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item"><span class="name">Bitcoin</span> What is it, really?</span>
+    <span class="ticker-item"><span class="name">Stablecoins</span> The internet's dollar</span>
+    <span class="ticker-item"><span class="name">GENIUS Act</span> New US regulation explained</span>
+    <span class="ticker-item"><span class="name">RWA Tokenization</span> $80B by end of 2026</span>
+    <span class="ticker-item"><span class="name">DeFi</span> Banks without banks</span>
+    <span class="ticker-item"><span class="name">ETF</span> Crypto goes mainstream</span>
   </div>
+</div>
 
-  <div class="category-bar">
-    <div class="category-bar-inner">
-      <button class="cat-btn active" data-cat="all">
-        All Articles <span class="cat-badge" id="badge-all">25</span>
-      </button>
-      <button class="cat-btn" data-cat="ea">
-        EA &amp; Strategy Analysis <span class="cat-badge" id="badge-ea">11</span>
-      </button>
-      <button class="cat-btn" data-cat="geo">
-        Geopolitics &amp; Markets <span class="cat-badge" id="badge-geo">6</span>
-      </button>
-      <button class="cat-btn" data-cat="regime">
-        Market Regimes <span class="cat-badge" id="badge-regime">5</span>
-      </button>
-      <button class="cat-btn" data-cat="econ">
-        Economic Events <span class="cat-badge" id="badge-econ">3</span>
-      </button>
-    </div>
-  </div>
+<!-- FEATURED ARTICLES -->
+<section>
+  <div class="container">
+    <p class="section-label">Latest</p>
+    <h2 class="section-title">Featured Articles</h2>
 
-  <main class="main">
-
-    <!-- Hero: most recent / highest engagement article -->
-    <div class="hero-article" data-cat="geo" id="hero-card">
-      <div class="hero-text">
+    <div class="featured">
+      <!-- Main featured -->
+      <a href="/articles/what-is-a-stablecoin.html" class="card card-main fade-in">
+        <div class="card-visual">🪙</div>
         <div>
-          <span class="cat-tag">Geopolitics &amp; Markets</span>
-          <h2>Why the Dollar Is Strong in 2026 — And How Long It Can Last</h2>
-          <p class="excerpt">DXY is above 100. The Fed has shelved its rate cut roadmap. Safe-haven flows from the Iran conflict are amplifying the USD bid on top of a fundamentally supported rate story. Here's what's driving dollar strength — and what would end it.</p>
-        </div>
-        <a href="article25-usd-strength-2026.html" class="read-link">Read Article →</a>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-visual-icon">💵</div>
-        <div class="hero-visual-label">Latest</div>
-      </div>
-    </div>
-
-    <!-- EA & Strategy Section -->
-    <div id="section-ea">
-      <div class="grid-section-label">
-        EA &amp; Strategy Analysis <span id="ea-count">11 articles</span>
-      </div>
-
-      <div class="magazine-grid">
-        <a href="article1-drawdown.html" class="article-card large" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">Most Traders Underestimate Drawdown — And It's Quietly Destroying Their Accounts</div>
-          <div class="card-excerpt">It's not the losing trades that break most traders. It's the ones they never thought were possible. A deep dive into why drawdown destroys accounts — and a five-step framework to survive it.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#1</span></div>
-        </a>
-        <a href="article2-winrate.html" class="article-card large" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">Is Win Rate Actually Overrated in Trading Strategies?</div>
-          <div class="card-excerpt">A 40% win rate strategy can outperform an 80% one. Here's the math behind expectancy that changes everything.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#2</span></div>
-        </a>
-        <a href="article3-backtests.html" class="article-card large" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">Why Do So Many Backtests Fail in Live Trading?</div>
-          <div class="card-excerpt">Six structural reasons your backtest results don't survive contact with the market — and how to fix each one.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#3</span></div>
-        </a>
-      </div>
-
-      <div class="magazine-grid" style="margin-top:1px">
-        <a href="article4-overfitting.html" class="article-card large" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">How Overfitting Destroys Trading Systems</div>
-          <div class="card-excerpt">A perfectly optimized strategy is often the most dangerous one. Here's how to detect and eliminate curve fitting.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#4</span></div>
-        </a>
-        <a href="article5-beyond-profit.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">How to Analyze a Trading Strategy Beyond Profit</div>
-          <div class="card-excerpt">Net profit is the last metric you should look at. Here's the complete four-tier analysis framework.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#5</span></div>
-        </a>
-        <a href="article6-metrics-matter.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">The Metrics That Actually Matter in Trading Strategies</div>
-          <div class="card-excerpt">Some metrics predict future performance. Others just describe the past. Here's how to tell the difference.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#6</span></div>
-        </a>
-      </div>
-
-      <div class="magazine-grid" style="margin-top:1px">
-        <a href="article7-good-vs-lucky.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">The Difference Between a Good Strategy and a Lucky Backtest</div>
-          <div class="card-excerpt">Four tests that make it hard for a lucky strategy to pass — and easy for a genuine edge to prove itself.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#7</span></div>
-        </a>
-        <a href="article8-beginner-metrics.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">The Trading Metrics Beginners Focus on (But Shouldn't)</div>
-          <div class="card-excerpt">Win rate, net profit, trade count — why each one can actively mislead you, and what to watch instead.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#8</span></div>
-        </a>
-        <a href="article9-not-actually-profitable.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">Why Many "Profitable" Strategies Aren't Actually Profitable</div>
-          <div class="card-excerpt">Spread, slippage, regime dependency, and martingale illusions — the hidden costs that flip a "winner" into a loser.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#9</span></div>
-        </a>
-      </div>
-
-      <div class="magazine-grid two-col" style="margin-top:1px">
-        <a href="article22-mt4-vs-mt5.html" class="article-card" data-cat="ea">
-          <div class="card-cat ea">EA &amp; Strategy Analysis</div>
-          <div class="card-title">MT4 vs MT5 in 2026: Which Platform Should EA Traders Actually Use?</div>
-          <div class="card-excerpt">MT4 is in maintenance mode. MT5 has real-tick backtesting. But for EA traders, the right answer depends on your strategy, broker, and workflow — not which platform is newer.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#25</span></div>
-        </a>
-        <a href="article10-evaluate-ea.html" class="article-card" data-cat="ea" style="display:grid; grid-template-columns:1fr auto; align-items:center; gap:20px;">
-          <div>
-            <div class="card-cat ea" style="margin-bottom:8px">EA &amp; Strategy Analysis</div>
-            <div class="card-title" style="font-size:1.05rem">The Right Way to Evaluate an EA</div>
-            <div class="card-excerpt" style="-webkit-line-clamp:1; margin-top:6px">A complete four-phase framework: backtest quality → performance metrics → robustness testing → live deployment.</div>
+          <span class="card-tag tag-stablecoin">Stablecoins</span>
+          <h2>What Is a Stablecoin? The Beginner's Guide for 2026</h2>
+          <p>USDT, USDC, and the new GENIUS Act—stablecoins are becoming the internet's dollar. Here's what every American should know before they become unavoidable.</p>
+          <div class="card-meta">
+            <time>March 2026</time>
+            <span class="read-time">⏱ 6 min read</span>
           </div>
-          <span class="card-read" style="white-space:nowrap; padding-right:8px">Read →</span>
-        </a>
-      </div>
+        </div>
+      </a>
+
+      <!-- Side cards -->
+      <a href="/articles/bitcoin-etf-explained.html" class="card fade-in delay-1">
+        <span class="card-tag tag-bitcoin">Bitcoin</span>
+        <h2>Bitcoin ETFs Explained: What the $175B Milestone Means for You</h2>
+        <p>Over $175 billion is now sitting in Bitcoin ETFs. Here's why that's a big deal and what it means for everyday investors.</p>
+        <div class="card-meta">
+          <time>March 2026</time>
+          <span class="read-time">⏱ 5 min read</span>
+        </div>
+      </a>
+
+      <a href="/articles/rwa-tokenization.html" class="card fade-in delay-2">
+        <span class="card-tag tag-rwa">RWA</span>
+        <h2>Tokenized Real-World Assets: The $80 Billion Trend Nobody's Talking About</h2>
+        <p>Real estate, bonds, and private equity are being put on the blockchain. Here's what "tokenization" actually means in plain English.</p>
+        <div class="card-meta">
+          <time>February 2026</time>
+          <span class="read-time">⏱ 7 min read</span>
+        </div>
+      </a>
     </div>
 
-    <hr class="section-sep">
+    <!-- More articles grid -->
+    <p class="section-label" id="topics">More Articles</p>
+    <h2 class="section-title">Keep Reading</h2>
 
-    <!-- Geopolitics Section -->
-    <div id="section-geo">
-      <div class="grid-section-label">
-        Geopolitics &amp; Markets <span id="geo-count">9 articles</span>
-      </div>
+    <div class="grid-3">
+      <a href="/articles/genius-act-explained.html" class="card fade-in">
+        <span class="card-tag tag-regulation">Regulation</span>
+        <h2>The GENIUS Act: What America's First Stablecoin Law Means</h2>
+        <p>Congress finally passed stablecoin legislation. Here's what changed and why it matters.</p>
+        <div class="card-meta"><time>February 2026</time> <span>⏱ 5 min</span></div>
+      </a>
 
-      <div class="magazine-grid">
-        <a href="article11-geopolitics-markets.html" class="article-card large" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">How Geopolitics Moves the Markets</div>
-          <div class="card-excerpt">When headlines shift, currencies react first. Here's the three-channel mechanism — and what it means for FX traders.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#11</span></div>
-        </a>
-        <a href="article12-political-uncertainty.html" class="article-card large" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Trading During Political and Economic Uncertainty</div>
-          <div class="card-excerpt">Uncertainty isn't the enemy — it's where large currency moves originate. Five principles for navigating it.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#12</span></div>
-        </a>
-        <a href="article13-global-conflicts.html" class="article-card large" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">The Market Impact of Global Conflicts</div>
-          <div class="card-excerpt">From commodity shocks to capital flight — how armed conflict restructures FX markets and what history tells us.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#13</span></div>
-        </a>
-      </div>
+      <a href="/articles/what-is-defi.html" class="card fade-in delay-1">
+        <span class="card-tag tag-defi">DeFi</span>
+        <h2>DeFi for Beginners: Lending, Borrowing, and Earning Without a Bank</h2>
+        <p>Decentralized finance lets you earn interest without a savings account. But what's the catch?</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 8 min</span></div>
+      </a>
 
-      <div class="magazine-grid" style="margin-top:1px">
-        <a href="article14-geopolitical-volatility.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Understanding Geopolitical Volatility in Financial Markets</div>
-          <div class="card-excerpt">Geopolitical volatility has three phases. Each one requires a different trading approach.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#14</span></div>
-        </a>
-        <a href="article15-age-of-uncertainty.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Trading in the Age of Global Uncertainty</div>
-          <div class="card-excerpt">The post-Cold War stability is over. Here's what has structurally changed — and how to adapt your strategy.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#15</span></div>
-        </a>
-        <a href="article16-geopolitical-risk-matters.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Why Geopolitical Risk Matters More Than Ever</div>
-          <div class="card-excerpt">Five structural reasons geopolitical risk has moved from background noise to primary market driver.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#16</span></div>
-        </a>
-      </div>
+      <a href="/articles/bitcoin-not-just-internet-money.html" class="card fade-in delay-2">
+        <span class="card-tag tag-bitcoin">Bitcoin</span>
+        <h2>Why Bitcoin Isn't Just "Internet Money" Anymore</h2>
+        <p>From treasury reserves to ETFs to Lightning Network payments — Bitcoin's role is evolving fast.</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 6 min</span></div>
+      </a>
 
-      <div class="magazine-grid" style="margin-top:1px">
-        <a href="article23-iran-oil-shock.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Iran-US Conflict and the Oil Shock Reshaping FX Markets in 2026</div>
-          <div class="card-excerpt">Brent above $100, the Strait of Hormuz under threat, every central bank forced to reprice. What the oil shock means for USD, JPY, CAD, and your trading systems.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#25</span></div>
-        </a>
-        <a href="article24-central-bank-divergence-march2026.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Central Bank Super-Week: What the March 2026 Divergence Means for FX</div>
-          <div class="card-excerpt">Six major central banks held rates in the same week — but their forward signals diverged sharply. Here's the rate divergence map and the cross rates it creates.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#26</span></div>
-        </a>
-        <a href="article25-usd-strength-2026.html" class="article-card" data-cat="geo">
-          <div class="card-cat geo">Geopolitics &amp; Markets</div>
-          <div class="card-title">Why the Dollar Is Strong in 2026 — And How Long It Can Last</div>
-          <div class="card-excerpt">DXY above 100, zero Fed cuts priced, safe-haven flows on top. Two pillars are driving USD strength — and they have very different lifespans.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#27</span></div>
-        </a>
-      </div>
+      <a href="/articles/usdc-vs-usdt.html" class="card fade-in">
+        <span class="card-tag tag-stablecoin">Stablecoins</span>
+        <h2>USDC vs USDT: Which Stablecoin Should You Trust?</h2>
+        <p>Both are pegged to the dollar, but they're very different under the hood.</p>
+        <div class="card-meta"><time>January 2026</time> <span>⏱ 5 min</span></div>
+      </a>
+
+      <a href="/articles/what-is-a-crypto-wallet.html" class="card fade-in delay-1">
+        <span class="card-tag tag-basics">Basics</span>
+        <h2>Can You Really Buy Tokenized US Treasury Bonds?</h2>
+        <p>Yes, and over $7 billion in tokenized Treasuries are already live. Here's how it works.</p>
+        <div class="card-meta"><time>December 2025</time> <span>⏱ 6 min</span></div>
+      </a>
+
+      <a href="/articles/ai-crypto-agents.html" class="card fade-in delay-2">
+        <span class="card-tag tag-defi">DeFi</span>
+        <h2>AI Agents That Spend Crypto: The New Wave of Web3 Apps</h2>
+        <p>AI and stablecoins are merging. The next generation of apps won't even call themselves "crypto."</p>
+        <div class="card-meta"><time>December 2025</time> <span>⏱ 7 min</span></div>
+      </a>
     </div>
 
-    <hr class="section-sep" id="sep-regime">
-
-    <!-- Market Regimes Section -->
-    <div id="section-regime">
-      <div class="grid-section-label">
-        Market Regimes <span id="regime-count">5 articles</span>
-      </div>
-
-      <div class="magazine-grid">
-        <a href="article17-market-regimes-intro.html" class="article-card large" data-cat="regime">
-          <div class="card-cat regime">Market Regimes</div>
-          <div class="card-title">Not All Markets Are Equal: Understanding Market Regimes</div>
-          <div class="card-excerpt">Trending, ranging, volatile, compressed — markets exist in distinct states. Understanding them is the foundation of strategy design that actually works.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#17</span></div>
-        </a>
-        <a href="article18-markets-change.html" class="article-card large" data-cat="regime">
-          <div class="card-cat regime">Market Regimes</div>
-          <div class="card-title">When Markets Change, Your Strategy Breaks</div>
-          <div class="card-excerpt">It wasn't a bad strategy. The market just changed. Here's why regime shifts break strategies — and the warning signs to watch for.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#18</span></div>
-        </a>
-        <a href="article19-market-changes-state.html" class="article-card large" data-cat="regime">
-          <div class="card-cat regime">Market Regimes</div>
-          <div class="card-title">The Market Is Not Random — It Changes State</div>
-          <div class="card-excerpt">Volatility clustering, autocorrelation, the Hurst exponent — the evidence that markets cycle through identifiable, measurable states.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#19</span></div>
-        </a>
-      </div>
-
-      <div class="magazine-grid two-col" style="margin-top:1px">
-        <a href="article20-detect-regimes.html" class="article-card" data-cat="regime">
-          <div class="card-cat regime">Market Regimes</div>
-          <div class="card-title">How to Detect Market Regimes Before It's Too Late</div>
-          <div class="card-excerpt">ADR ratio, Efficiency Ratio, ATR percentile — the practical detection methods that traders actually use, with formulas and thresholds.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#20</span></div>
-        </a>
-        <a href="article21-matching-strategies.html" class="article-card" data-cat="regime">
-          <div class="card-cat regime">Market Regimes</div>
-          <div class="card-title">Matching Strategies to Market Regimes: A Practical Guide</div>
-          <div class="card-excerpt">The complete regime playbook — which strategies to deploy in each market state, and how to build a portfolio that works across all conditions.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#21</span></div>
-        </a>
-      </div>
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> ChainClarity is an educational blog. Nothing on this site constitutes financial, investment, or legal advice. Crypto assets are volatile and speculative. Always do your own research before making any financial decisions.
     </div>
+  </div>
+</section>
 
-    <hr class="section-sep" id="sep-econ">
-
-    <!-- Economic Events Section -->
-    <div id="section-econ">
-      <div class="grid-section-label">
-        Economic Events <span id="econ-count">3 articles</span>
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="container">
+    <div class="newsletter">
+      <div>
+        <h3>Stay in the loop.</h3>
+        <p>Get the latest explainers delivered to your inbox. No spam, no hype.</p>
       </div>
-
-      <div class="magazine-grid two-col">
-        <a href="ecb-rate-decision-20260319.html" class="article-card large" data-cat="econ">
-          <div class="card-cat econ">Economic Events</div>
-          <div class="card-title">ECB March 2026: A Hold with a Hawkish Undercurrent</div>
-          <div class="card-excerpt">The ECB held all three key rates in March 2026 as the Iran war clouds the inflation outlook. Here's what it means for EUR/USD, GBP/EUR, and systematic traders.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#24</span></div>
-        </a>
-        <a href="boe-rate-decision-20260319.html" class="article-card large" data-cat="econ">
-          <div class="card-cat econ">Economic Events</div>
-          <div class="card-title">BOE March 2026: A Unanimous Hold as Iran War Rewrites the Rate Path</div>
-          <div class="card-excerpt">The Bank of England held rates at 3.75% and dropped its easing guidance as Iran-driven oil prices reignite UK inflation risk. Here's what the hawkish hold means for GBP/USD, EUR/GBP, and your trading systems.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#23</span></div>
-        </a>
-      </div>
-      <div class="magazine-grid" style="margin-top:1px; grid-template-columns:1fr">
-        <a href="fomc-rate-decision-20260319.html" class="article-card" data-cat="econ">
-          <div class="card-cat econ">Economic Events</div>
-          <div class="card-title">FOMC March 2026: A Hawkish Hold in a Stagflation Shadow</div>
-          <div class="card-excerpt">The Fed kept rates at 3.50–3.75%, raised its inflation forecast to 2.7%, and signaled just one cut for the year. With an Iran-driven oil shock reshaping the macro landscape, the dollar's trajectory is anything but simple.</div>
-          <div class="card-footer"><span class="card-read">Read →</span><span class="card-num">#22</span></div>
-        </a>
-      </div>
+      <form class="nl-form" action="https://buttondown.com/api/emails/embed-subscribe/clarity-brief" method="post" target="_blank">
+        <input class="nl-input" type="email" name="email" placeholder="you@example.com" required>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </form>
     </div>
+  </div>
+</section>
 
-    <p class="no-results" id="noResults">No articles found. Try a different search term.</p>
-
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2026 <a href="https://fxstrategyanalyzer.com/en/">FX Strategy Analyzer</a> · Free tools for MT4/MT5 traders · <a href="https://fxstrategyanalyzer.com/en/privacy/">Privacy Policy</a></p>
-  </footer>
-
-  <script>
-    const articles = document.querySelectorAll('.article-card');
-    const heroCard = document.getElementById('hero-card');
-    const catBtns = document.querySelectorAll('.cat-btn');
-    const searchInput = document.getElementById('searchInput');
-    const noResults = document.getElementById('noResults');
-    const sectionEa = document.getElementById('section-ea');
-    const sectionGeo = document.getElementById('section-geo');
-    const sectionRegime = document.getElementById('section-regime');
-    const sectionEcon = document.getElementById('section-econ');
-    const sepRegime = document.getElementById('sep-regime');
-    const sepEcon = document.getElementById('sep-econ');
-
-    let currentCat = 'all';
-    let currentSearch = '';
-
-    function updateDisplay() {
-      let visibleEa = 0, visibleGeo = 0, visibleRegime = 0, visibleEcon = 0, total = 0;
-
-      // Hero card
-      const heroMatch = matchCard(heroCard, currentCat, currentSearch);
-      heroCard.dataset.hidden = (!heroMatch).toString();
-
-      articles.forEach(card => {
-        const cat = card.dataset.cat;
-        const title = card.querySelector('.card-title')?.textContent || '';
-        const excerpt = card.querySelector('.card-excerpt')?.textContent || '';
-        const text = (title + ' ' + excerpt).toLowerCase();
-        const searchMatch = !currentSearch || text.includes(currentSearch.toLowerCase());
-        const catMatch = currentCat === 'all' || cat === currentCat;
-        const visible = catMatch && searchMatch;
-        card.dataset.hidden = (!visible).toString();
-        if (visible) {
-          total++;
-          if (cat === 'ea') visibleEa++;
-          if (cat === 'geo') visibleGeo++;
-          if (cat === 'regime') visibleRegime++;
-          if (cat === 'econ') visibleEcon++;
-        }
-      });
-
-      // Show/hide sections
-      const showAll = currentCat === 'all';
-      sectionEa.style.display = (showAll || currentCat === 'ea') ? 'block' : 'none';
-      sectionGeo.style.display = (showAll || currentCat === 'geo') ? 'block' : 'none';
-      sectionRegime.style.display = (showAll || currentCat === 'regime') ? 'block' : 'none';
-      sectionEcon.style.display = (showAll || currentCat === 'econ') ? 'block' : 'none';
-
-      // Section separators
-      const sep = document.querySelector('.section-sep:not(#sep-regime):not(#sep-econ)');
-      if (sep) sep.style.display = (showAll && visibleEa > 0 && visibleGeo > 0) ? 'block' : 'none';
-      sepRegime.style.display = (showAll && visibleRegime > 0 && (visibleEa > 0 || visibleGeo > 0)) ? 'block' : 'none';
-      sepEcon.style.display = (showAll && visibleEcon > 0 && (visibleEa > 0 || visibleGeo > 0 || visibleRegime > 0)) ? 'block' : 'none';
-
-      // No results
-      noResults.style.display = (total === 0 && !heroMatch) ? 'block' : 'none';
-
-      // Update counts
-      document.getElementById('badge-all').textContent = total;
-      document.getElementById('badge-geo').textContent = visibleGeo;
-      document.getElementById('ea-count').textContent = visibleEa + ' article' + (visibleEa !== 1 ? 's' : '');
-      document.getElementById('geo-count').textContent = visibleGeo + ' article' + (visibleGeo !== 1 ? 's' : '');
-      document.getElementById('regime-count').textContent = visibleRegime + ' article' + (visibleRegime !== 1 ? 's' : '');
-      document.getElementById('econ-count').textContent = visibleEcon + ' article' + (visibleEcon !== 1 ? 's' : '');
-      document.getElementById('badge-econ').textContent = visibleEcon;
-    }
-
-    function matchCard(el, cat, search) {
-      const elCat = el.dataset.cat;
-      const title = el.querySelector('h2')?.textContent || el.querySelector('.card-title')?.textContent || '';
-      const excerpt = el.querySelector('.excerpt')?.textContent || el.querySelector('.card-excerpt')?.textContent || '';
-      const text = (title + ' ' + excerpt).toLowerCase();
-      const catMatch = cat === 'all' || elCat === cat;
-      const searchMatch = !search || text.includes(search.toLowerCase());
-      return catMatch && searchMatch;
-    }
-
-    catBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        catBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCat = btn.dataset.cat;
-        updateDisplay();
-      });
-    });
-
-    searchInput.addEventListener('input', () => {
-      currentSearch = searchInput.value.trim();
-      updateDisplay();
-    });
-  </script>
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="logo">Chain<span>Clarity</span></a>
+  <ul class="footer-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+    <li><a href="/disclaimer.html">Disclaimer</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 ChainClarity. For educational purposes only. Not financial advice.</p>
+</footer>
 
 </body>
 </html>
+

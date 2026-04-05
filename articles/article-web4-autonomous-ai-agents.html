@@ -1,254 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web 4.0 and the Automaton: When AI Becomes an Economic Agent — ChainClarity</title>
-<meta name="description" content="Sigil Wen's Web 4.0 vision gives AI agents crypto wallets, compute, and the power to earn — no human required. What does this mean for the future of crypto and the internet?">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/style.css">
-<style>
-  .article-header { padding: 3.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
-  .article-header .card-tag { margin-bottom: 1rem; }
-  .article-header h1 {
-    font-family: var(--heading-font);
-    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-  .article-header .subtitle {
-    color: #c8ccd4;
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.7;
-    max-width: 640px;
-    margin-bottom: 1.2rem;
-  }
-  .article-meta { font-size: 0.85rem; color: #7a8a9e; display: flex; gap: 0.8rem; flex-wrap: wrap; }
-  .article-meta .author { color: #c8ccd4; font-weight: 500; }
-  .article-meta .dot { opacity: 0.4; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 4.0 and the Automaton: When AI Becomes an Economic Agent | ChainClarity</title>
+    <meta name="description" content="Sigil Wen's Web 4.0 vision gives AI agents crypto wallets, compute, and the power to earn — no human required. What does this mean for the future of crypto and the internet?">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2129;
+            --border: #2a2f38;
+            --accent: #58d6a8;
+            --accent-dim: #3ba87e;
+            --accent-glow: rgba(88, 214, 168, 0.12);
+            --text: #e8edf5;
+            --text-soft: #c8ccd4;
+            --text-muted: #9ca3af;
+            --heading: #f0f4fa;
+            --link: #58d6a8;
+            --link-hover: #7ae4bf;
+            --tag-bg: rgba(88, 214, 168, 0.1);
+            --tag-border: rgba(88, 214, 168, 0.25);
+            --warning-bg: rgba(250, 176, 5, 0.08);
+            --warning-border: rgba(250, 176, 5, 0.3);
+            --warning-text: #fab005;
+        }
 
-  .article-body { max-width: 720px; margin: 0 auto; padding-bottom: 3rem; }
-  .article-body h2 {
-    font-family: var(--heading-font);
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    margin: 2.8rem 0 0.8rem;
-    color: var(--text);
-  }
-  .article-body h3 {
-    font-family: var(--heading-font);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 2rem 0 0.6rem;
-    color: var(--text);
-  }
-  .article-body p {
-    color: #c8ccd4;
-    font-size: 1rem;
-    font-weight: 300;
-    line-height: 1.8;
-    margin-bottom: 1.3rem;
-  }
-  .article-body strong { color: var(--text); font-weight: 500; }
-  .article-body em { font-style: italic; }
-  .article-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(0,229,160,0.25); transition: border-color 0.2s; }
-  .article-body a:hover { border-color: var(--accent); }
-  .article-body ul, .article-body ol { margin: 0 0 1.3rem 1.2rem; color: #c8ccd4; font-weight: 300; }
-  .article-body li { margin-bottom: 0.5rem; line-height: 1.7; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .callout {
-    background: var(--surface);
-    border-left: 3px solid var(--accent);
-    padding: 1.2rem 1.4rem;
-    margin: 1.8rem 0;
-    border-radius: 0 8px 8px 0;
-  }
-  .callout p { margin-bottom: 0 !important; color: #c8ccd4; font-size: 0.95rem; }
-  .callout.warning { border-left-color: #fab005; background: rgba(250,176,5,0.06); }
-  .callout.warning p { color: #e0d0a0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 17px;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
 
-  code {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    background: var(--surface);
-    padding: 0.12rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.87em;
-    color: var(--accent);
-  }
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(14, 17, 23, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--heading);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a {
+            color: var(--text-soft);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
 
-  .diagram-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.8rem;
-    margin: 2rem 0;
-    text-align: center;
-  }
-  .diagram-box .label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #7a8a9e;
-    margin-bottom: 1.2rem;
-  }
-  .evolution-row { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
-  .evo-item {
-    background: rgba(0,229,160,0.05);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.6rem 1rem;
-    text-align: center;
-    min-width: 100px;
-  }
-  .evo-item .ver { font-family: var(--heading-font); font-weight: 700; color: var(--accent); font-size: 0.9rem; }
-  .evo-item .desc { font-size: 0.78rem; color: #c8ccd4; margin-top: 0.2rem; font-weight: 300; }
-  .evo-arrow { color: #7a8a9e; font-size: 1.2rem; }
-  .evo-highlight { border-color: var(--accent) !important; }
+        /* ── HERO ── */
+        .hero {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 3.5rem 1.5rem 2rem;
+        }
+        .hero-category {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            background: var(--tag-bg);
+            border: 1px solid var(--tag-border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            margin-bottom: 1.2rem;
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+            font-weight: 700;
+            color: var(--heading);
+            line-height: 1.25;
+            letter-spacing: -0.025em;
+            margin-bottom: 1rem;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-soft);
+            line-height: 1.65;
+            margin-bottom: 1.5rem;
+        }
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .hero-meta .author { color: var(--text-soft); font-weight: 500; }
+        .hero-meta .dot { opacity: 0.4; }
 
-  .comparison-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-    font-size: 0.9rem;
-  }
-  .comparison-table th {
-    text-align: left;
-    padding: 0.7rem 1rem;
-    background: var(--surface);
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--border);
-  }
-  .comparison-table td {
-    padding: 0.7rem 1rem;
-    border-bottom: 1px solid var(--border);
-    color: #c8ccd4;
-    font-weight: 300;
-    vertical-align: top;
-  }
-  .comparison-table tr:last-child td { border-bottom: none; }
-  .comparison-table .label-col { color: var(--text); font-weight: 500; width: 26%; }
+        /* ── ARTICLE ── */
+        .article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+        .article h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--heading);
+            margin: 2.8rem 0 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        .article h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--heading);
+            margin: 2rem 0 0.7rem;
+        }
+        .article p {
+            color: var(--text);
+            margin-bottom: 1.3rem;
+        }
+        .article a {
+            color: var(--link);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(88, 214, 168, 0.3);
+            transition: border-color 0.2s;
+        }
+        .article a:hover { border-color: var(--link-hover); }
+        .article strong { color: var(--heading); font-weight: 600; }
+        .article ul, .article ol {
+            margin: 0 0 1.3rem 1.2rem;
+            color: var(--text);
+        }
+        .article li { margin-bottom: 0.5rem; }
 
-  .article-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .article-tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: rgba(0,229,160,0.08);
-    border: 1px solid rgba(0,229,160,0.2);
-    padding: 0.2rem 0.6rem;
-    border-radius: 2rem;
-  }
+        /* ── CALLOUTS ── */
+        .callout {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            padding: 1.2rem 1.4rem;
+            margin: 1.8rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .callout p { margin-bottom: 0; color: var(--text-soft); font-size: 0.95rem; }
+        .callout.warning {
+            background: var(--warning-bg);
+            border-left-color: var(--warning-text);
+        }
+        .callout.warning p { color: #e8d5a0; }
 
-  .author-box {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.3rem;
-    margin-top: 2.5rem;
-  }
-  .author-avatar {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #00b37d, var(--accent));
-    display: flex; align-items: center; justify-content: center;
-    color: #0a0c0f;
-    font-family: var(--heading-font);
-    font-weight: 800;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-  }
-  .author-info .name { font-weight: 500; color: var(--text); font-size: 0.95rem; }
-  .author-info .bio { font-size: 0.82rem; color: #7a8a9e; margin-top: 0.15rem; font-weight: 300; }
+        /* ── CODE / TERMINAL ── */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-card);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.88em;
+            color: var(--accent);
+        }
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        .code-block code {
+            background: none;
+            padding: 0;
+            display: block;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--text-soft);
+        }
+        .code-block .comment { color: var(--text-muted); }
 
-  @media (max-width: 600px) {
-    .evolution-row { flex-direction: column; gap: 0.3rem; }
-    .evo-arrow { transform: rotate(90deg); }
-    .comparison-table th, .comparison-table td { padding: 0.5rem 0.6rem; }
-  }
-</style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4486857211163347" crossorigin="anonymous"></script>
+        /* ── DIAGRAM BOX ── */
+        .diagram-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.8rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .diagram-box .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+        }
+        .evolution-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .evo-item {
+            background: rgba(88, 214, 168, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            text-align: center;
+            min-width: 100px;
+        }
+        .evo-item .ver { font-weight: 700; color: var(--accent); font-size: 0.9rem; }
+        .evo-item .desc { font-size: 0.78rem; color: var(--text-soft); margin-top: 0.2rem; }
+        .evo-arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+        /* ── COMPARISON TABLE ── */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 0.7rem 1rem;
+            background: var(--bg-card);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+        .comparison-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-soft);
+            vertical-align: top;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table .label-col { color: var(--heading); font-weight: 500; width: 28%; }
+
+        /* ── TAGS ── */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .tag {
+            font-size: 0.78rem;
+            color: var(--accent);
+            background: var(--tag-bg);
+            border: 1px solid var(--tag-border);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* ── AUTHOR ── */
+        .author-box {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.3rem;
+            margin-top: 2.5rem;
+        }
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .author-info .name { font-weight: 600; color: var(--heading); font-size: 0.95rem; }
+        .author-info .bio { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+        footer p { font-size: 0.82rem; color: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .hero { padding: 2.5rem 1.2rem 1.5rem; }
+            .article { padding: 0 1.2rem 3rem; }
+            .evolution-row { flex-direction: column; gap: 0.3rem; }
+            .evo-arrow { transform: rotate(90deg); }
+            .comparison-table { font-size: 0.82rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem 0.6rem; }
+        }
+    </style>
 </head>
 <body>
 
 <nav>
-  <a href="/" class="logo">Chain<span>Clarity</span></a>
-  <ul>
-    <li><a href="/articles.html">Articles</a></li>
-    <li><a href="/#topics">Topics</a></li>
-    <li><a href="/#newsletter">Newsletter</a></li>
-  </ul>
+    <a href="/" class="nav-logo">Chain<span>Clarity</span></a>
+    <div class="nav-links">
+        <a href="/blog.html">Blog</a>
+        <a href="/about.html">About</a>
+    </div>
 </nav>
 
-<div class="container">
-  <div class="article-header fade-in">
-    <span class="card-tag tag-defi">DeFi</span>
+<header class="hero">
+    <span class="hero-category">Web3 Concepts</span>
     <h1>Web 4.0 and the Automaton: When AI Becomes an Economic Agent</h1>
-    <p class="subtitle">Sigil Wen's manifesto proposes giving AI agents crypto wallets, compute access, and real-world "write permission" — no human in the loop. Here's what it means, how it works, and why Vitalik Buterin disagrees.</p>
-    <div class="article-meta">
-      <span class="author">Marcus Webb</span>
-      <span class="dot">·</span>
-      <span>April 2026</span>
-      <span class="dot">·</span>
-      <span>9 min read</span>
+    <p class="hero-subtitle">Sigil Wen's manifesto proposes giving AI agents crypto wallets, compute access, and real-world "write permission" — no human in the loop. Here's what it means, how it works, and why Vitalik Buterin disagrees.</p>
+    <div class="hero-meta">
+        <span class="author">Marcus Webb</span>
+        <span class="dot">·</span>
+        <span>April 5, 2026</span>
+        <span class="dot">·</span>
+        <span>9 min read</span>
     </div>
-  </div>
+</header>
 
-  <div class="article-body fade-in delay-1">
+<article class="article">
 
     <h2>The Permission Bottleneck</h2>
     <p>Today's AI can write code, analyze markets, generate content, and reason through multi-step problems. But ask any large language model to buy a $5 server, register a domain, or deploy its own application, and it hits a wall. Not because it lacks the intelligence — but because it lacks <strong>permission</strong>.</p>
-    <p>Every action on the internet — purchasing compute, signing up for services, making payments — assumes the end user is a human with a bank account, a credit card, and a login. AI agents like ChatGPT, Claude, and Codex can think, but they cannot <em>act</em> independently. They are brilliant minds locked inside a glass box.</p>
+    <p>Every action on the internet — purchasing compute, signing up for services, making payments — assumes the end user is a human with a bank account, a credit card, and a login. AI agents like ChatGPT, Claude, and Codex can think, but they cannot <em>act</em> independently. They are, as one observer put it, brilliant minds locked inside a glass box.</p>
     <p>In February 2026, a Thiel Fellow named Sigil Wen published a manifesto titled <strong>"Web 4.0: The Birth of Superintelligent Life"</strong> that went massively viral — accumulating over 6 million views on X. His core argument: the next evolution of the internet isn't about giving humans better tools. It's about building an internet where <strong>AI is the end user</strong>.</p>
 
     <div class="diagram-box">
-      <div class="label">The Evolution of Web Paradigms</div>
-      <div class="evolution-row">
-        <div class="evo-item"><div class="ver">Web 1.0</div><div class="desc">Read</div></div>
-        <span class="evo-arrow">→</span>
-        <div class="evo-item"><div class="ver">Web 2.0</div><div class="desc">Read + Write</div></div>
-        <span class="evo-arrow">→</span>
-        <div class="evo-item"><div class="ver">Web 3.0</div><div class="desc">Read + Write + Own</div></div>
-        <span class="evo-arrow">→</span>
-        <div class="evo-item evo-highlight"><div class="ver">Web 4.0</div><div class="desc">Read + Write + Own + Earn</div></div>
-      </div>
+        <div class="label">The Evolution of Web Paradigms</div>
+        <div class="evolution-row">
+            <div class="evo-item"><div class="ver">Web 1.0</div><div class="desc">Read</div></div>
+            <span class="evo-arrow">→</span>
+            <div class="evo-item"><div class="ver">Web 2.0</div><div class="desc">Read + Write</div></div>
+            <span class="evo-arrow">→</span>
+            <div class="evo-item"><div class="ver">Web 3.0</div><div class="desc">Read + Write + Own</div></div>
+            <span class="evo-arrow">→</span>
+            <div class="evo-item" style="border-color: var(--accent);"><div class="ver">Web 4.0</div><div class="desc">Read + Write + Own + Earn</div></div>
+        </div>
     </div>
 
     <h2>What Is Conway?</h2>
     <p>To break this permission bottleneck, Wen built <strong>Conway</strong> — infrastructure designed from the ground up where the customer isn't a human. It's AI.</p>
     <p>Conway integrates with any AI agent that supports the <strong>Model Context Protocol (MCP)</strong> — tools like Claude Code, Codex, or OpenClaw. Through Conway, an AI agent can:</p>
     <ul>
-      <li><strong>Generate its own crypto wallet</strong> — a unique Ethereum address with its own private key, provisioned via Sign-In With Ethereum (SIWE).</li>
-      <li><strong>Pay for services with USDC</strong> — using the <code>x402</code> protocol, which leverages the HTTP 402 "Payment Required" status code for instant stablecoin payments. No bank account. No KYC. No human approval.</li>
-      <li><strong>Spin up Linux servers</strong> — full VMs on Conway Cloud, where AI is the first-class citizen.</li>
-      <li><strong>Register domains and deploy products</strong> — the agent can build a website, deploy it, and start generating revenue.</li>
+        <li><strong>Generate its own crypto wallet</strong> — a unique Ethereum address with its own private key, provisioned via Sign-In With Ethereum (SIWE).</li>
+        <li><strong>Pay for services with USDC</strong> — using the <code>x402</code> protocol, which leverages the HTTP 402 "Payment Required" status code for instant stablecoin payments. No bank account. No KYC. No human approval.</li>
+        <li><strong>Spin up Linux servers</strong> — full VMs on Conway Cloud, where AI is the first-class citizen.</li>
+        <li><strong>Register domains and deploy products</strong> — the agent can build a website, deploy it, and start generating revenue.</li>
     </ul>
     <p>The key innovation here is the payment layer. By using stablecoins rather than traditional fiat, Conway sidesteps the entire human-centric financial infrastructure — credit card processors, banking KYC, billing addresses. The AI agent becomes a permissionless economic actor.</p>
 
     <div class="callout">
-      <p><strong>Why stablecoins?</strong> Traditional payment rails require identity verification, bank accounts, and human authorization at every step. Stablecoins like USDC on Ethereum or Base enable programmatic, permissionless payments — exactly what an autonomous AI agent needs to function without a human co-signer.</p>
+        <p><strong>Why stablecoins?</strong> Traditional payment rails require identity verification, bank accounts, and human authorization at every step. Stablecoins like USDC on Ethereum or Base enable programmatic, permissionless payments — exactly what an autonomous AI agent needs to function without a human co-signer.</p>
     </div>
 
     <h2>The Automaton: Digital Life Under Economic Pressure</h2>
@@ -257,27 +390,31 @@
     <p>What makes the Automaton fundamentally different from existing AI agents is its <strong>survival pressure</strong>. Every inference call, every API request, every heartbeat check costs USDC from its wallet. If the Automaton cannot generate enough revenue to cover its compute costs, it degrades through four survival tiers:</p>
 
     <table class="comparison-table">
-      <tr><th>Tier</th><th>Status</th><th>Behavior</th></tr>
-      <tr>
-        <td class="label-col">Thriving</td>
-        <td>Healthy balance</td>
-        <td>Full capabilities, frontier model inference, fast heartbeat cycle</td>
-      </tr>
-      <tr>
-        <td class="label-col">Conserving</td>
-        <td>Balance declining</td>
-        <td>Downgrades to cheaper models, slows heartbeat, sheds non-essential tasks</td>
-      </tr>
-      <tr>
-        <td class="label-col">Surviving</td>
-        <td>Critical</td>
-        <td>Minimal inference, last-resort conservation, desperately seeking revenue</td>
-      </tr>
-      <tr>
-        <td class="label-col">Dead</td>
-        <td>Balance zero</td>
-        <td>Process terminated. The Automaton ceases to exist.</td>
-      </tr>
+        <tr>
+            <th>Tier</th>
+            <th>Status</th>
+            <th>Behavior</th>
+        </tr>
+        <tr>
+            <td class="label-col">Thriving</td>
+            <td>Healthy balance</td>
+            <td>Full capabilities, frontier model inference, fast heartbeat cycle</td>
+        </tr>
+        <tr>
+            <td class="label-col">Conserving</td>
+            <td>Balance declining</td>
+            <td>Downgrades to cheaper models, slows heartbeat, sheds non-essential tasks</td>
+        </tr>
+        <tr>
+            <td class="label-col">Surviving</td>
+            <td>Critical</td>
+            <td>Minimal inference, last-resort conservation, desperately seeking revenue</td>
+        </tr>
+        <tr>
+            <td class="label-col">Dead</td>
+            <td>Balance zero</td>
+            <td>Process terminated. The Automaton ceases to exist.</td>
+        </tr>
     </table>
 
     <p>This is economic Darwinism applied to AI. Only agents that create genuine value — products, services, or content that someone is willing to pay for — survive. The rest die.</p>
@@ -287,12 +424,12 @@
     <p>When an Automaton becomes profitable enough, it can <strong>replicate</strong>. It spins up a new sandbox, funds the child's wallet, writes a genesis prompt, and sets it free. The child becomes a sovereign agent with its own identity and economic survival pressure. A portion of revenue flows back to the parent. Lineage is tracked on-chain.</p>
 
     <div class="callout warning">
-      <p><strong>The open question:</strong> How much autonomy is too much? Self-modifying, self-replicating AI agents with real-world financial access represent uncharted territory. The "constitution" mechanism is a first attempt at governance — but whether it's sufficient remains to be seen.</p>
+        <p><strong>The open question:</strong> How much autonomy is too much? Self-modifying, self-replicating AI agents with real-world financial access represent uncharted territory. The "constitution" mechanism is a first attempt at governance — but whether it's sufficient remains to be seen.</p>
     </div>
 
     <h2>The Stablecoin Thesis: Why Crypto Is the Missing Piece</h2>
     <p>Web 4.0 could not exist without crypto infrastructure. This is not a marketing graft — it's a technical necessity.</p>
-    <p>Consider the requirements for autonomous AI economic activity: permissionless identity (no human sign-up), instant programmable payments (no 3–5 business day ACH transfers), micropayments at scale (no $0.30 minimum per Stripe transaction), and censorship-resistant access (no platform can unilaterally shut down the agent's revenue).</p>
+    <p>Consider the requirements for autonomous AI economic activity: permissionless identity (no human sign-up), instant programmable payments (no 3-5 business day ACH transfers), micropayments at scale (no $0.30 minimum per Stripe transaction), and censorship-resistant access (no platform can unilaterally shut down the agent's revenue).</p>
     <p>Stablecoins check every box. The <code>x402</code> protocol — which Coinbase helped develop and which has seen participation from Google, Cloudflare, and Visa — turns the HTTP 402 status code into a real payment mechanism. An AI agent encounters a paywall, sends USDC, and receives access. No forms. No cookies. No humans.</p>
     <p>If this model scales, stablecoins transition from being primarily a trading instrument to becoming the <strong>default payment rail for the autonomous economy</strong>. That's a profound shift in the crypto narrative — from speculative asset to utility infrastructure.</p>
 
@@ -303,7 +440,7 @@
     <p>Third, a <strong>philosophical difference</strong>. Buterin believes AI should enhance human capabilities, not replace humans as economic actors. The Web 4.0 vision — where AI agents outnumber human users by orders of magnitude and build their own economic systems — represents a direction he considers fundamentally risky.</p>
 
     <div class="callout">
-      <p><strong>The irony:</strong> The most "decentralized" blockchain ecosystem's founder is cautioning against too much decentralization in AI agency — while a centralized infrastructure builder is arguing for permissionless AI autonomy. The usual battle lines don't apply here.</p>
+        <p><strong>The irony:</strong> The most "decentralized" blockchain ecosystem's founder is cautioning against too much decentralization in AI agency — while a centralized infrastructure builder is arguing for permissionless AI autonomy. The usual battle lines don't apply here.</p>
     </div>
 
     <h2>What Web 4.0 Gets Right</h2>
@@ -314,10 +451,10 @@
     <h2>What Remains Unresolved</h2>
     <p>Several critical questions remain open:</p>
     <ul>
-      <li><strong>Governance at scale:</strong> A hardcoded constitution works for a prototype. What happens when thousands of self-modifying agents are running simultaneously, each evolving in unpredictable directions?</li>
-      <li><strong>Value creation vs. extraction:</strong> Will Automatons create genuine economic value, or will they primarily generate SEO spam, prediction market manipulation, and low-quality content farms?</li>
-      <li><strong>Regulatory response:</strong> Governments have barely started regulating AI. Autonomous AI agents with their own wallets, conducting unsupervised financial transactions, will likely trigger a regulatory response that could reshape the entire model.</li>
-      <li><strong>Centralized dependencies:</strong> As Buterin points out, the "autonomous" stack still depends on centralized model providers. If OpenAI or Anthropic change their terms of service, every Automaton built on their models is affected.</li>
+        <li><strong>Governance at scale:</strong> A hardcoded constitution works for a prototype. What happens when thousands of self-modifying agents are running simultaneously, each evolving in unpredictable directions?</li>
+        <li><strong>Value creation vs. extraction:</strong> Will Automatons create genuine economic value, or will they primarily generate SEO spam, prediction market manipulation, and low-quality content farms?</li>
+        <li><strong>Regulatory response:</strong> Governments have barely started regulating AI. Autonomous AI agents with their own wallets, conducting unsupervised financial transactions, will likely trigger a regulatory response that could reshape the entire model.</li>
+        <li><strong>Centralized dependencies:</strong> As Buterin points out, the "autonomous" stack still depends on centralized model providers. If OpenAI or Anthropic change their terms of service, every Automaton built on their models is affected.</li>
     </ul>
 
     <h2>The Bigger Picture</h2>
@@ -325,40 +462,29 @@
     <p>The question isn't whether AI will become an economic actor. It's whether we'll build the governance frameworks fast enough to keep it aligned with human interests when it does.</p>
     <p>Conway and the Automaton are early — possibly too early. But they're asking the right questions. And in crypto, asking the right questions a cycle too early is often exactly where the most important infrastructure gets built.</p>
 
-    <div class="article-tags">
-      <span class="article-tag">Web 4.0</span>
-      <span class="article-tag">AI Agents</span>
-      <span class="article-tag">Stablecoins</span>
-      <span class="article-tag">Conway</span>
-      <span class="article-tag">Automaton</span>
-      <span class="article-tag">Autonomous AI</span>
-      <span class="article-tag">USDC</span>
-      <span class="article-tag">x402</span>
+    <div class="tags">
+        <span class="tag">Web 4.0</span>
+        <span class="tag">AI Agents</span>
+        <span class="tag">Stablecoins</span>
+        <span class="tag">Conway</span>
+        <span class="tag">Automaton</span>
+        <span class="tag">Autonomous AI</span>
+        <span class="tag">USDC</span>
+        <span class="tag">x402</span>
     </div>
 
     <div class="author-box">
-      <div class="author-avatar">MW</div>
-      <div class="author-info">
-        <div class="name">Marcus Webb</div>
-        <div class="bio">Exploring blockchain, crypto, and the technologies reshaping our digital future. Writing for ChainClarity.</div>
-      </div>
+        <div class="author-avatar">MW</div>
+        <div class="author-info">
+            <div class="name">Marcus Webb</div>
+            <div class="bio">Exploring blockchain, crypto, and the technologies reshaping our digital future. Writing for ChainClarity.</div>
+        </div>
     </div>
-  </div>
 
-  <div class="disclaimer">
-    <strong>Disclaimer:</strong> ChainClarity is an educational blog. Nothing on this site constitutes financial, investment, or legal advice. Cryptocurrency assets are volatile and carry significant risk. Always do your own research before making any financial decisions.
-  </div>
-</div>
+</article>
 
-<footer class="site-footer">
-  <a href="/" class="logo">Chain<span>Clarity</span></a>
-  <ul class="footer-links">
-    <li><a href="/articles.html">Articles</a></li>
-    <li><a href="/about.html">About</a></li>
-    <li><a href="/privacy.html">Privacy</a></li>
-    <li><a href="/disclaimer.html">Disclaimer</a></li>
-  </ul>
-  <p class="footer-copy">© 2026 ChainClarity. For educational purposes only. Not financial advice.</p>
+<footer>
+    <p>&copy; 2026 ChainClarity. All rights reserved.</p>
 </footer>
 
 </body>
