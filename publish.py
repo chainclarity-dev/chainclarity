@@ -151,6 +151,68 @@ def github_update_sitemap(slug):
     return False
 
 
+def gh_headers():
+    return {
+        "Authorization": f"Bearer {GH_TOKEN}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+
+def github_update_index_hero(slug, title, description, tag, date, read_time):
+    """index.html のFeatured Articles メインカードを最新記事で差し替える。"""
+    if not all([GH_TOKEN, GH_OWNER, GH_REPO]):
+        print("⚠️  GitHub環境変数が未設定。index.html更新をスキップします。")
+        return False
+    url = f"{GH_API}/repos/{GH_OWNER}/{GH_REPO}/contents/index.html"
+    resp = requests.get(url, headers=gh_headers())
+    if resp.status_code != 200:
+        print(f"❌ index.html 取得失敗: {resp.status_code}")
+        return False
+    sha = resp.json().get("sha")
+    html = base64.b64decode(resp.json().get("content", "")).decode("utf-8")
+
+    import re
+
+    tag_css = tag_to_class(tag)
+
+    # Replace the main featured card content
+    # Pattern: <a href="..." class="card card-main fade-in"> ... </a>
+    new_main_card = f'''<a href="/articles/{slug}.html" class="card card-main fade-in">
+        <div class="card-visual">📰</div>
+        <div>
+          <span class="card-tag {tag_css}">{tag}</span>
+          <h2>{title}</h2>
+          <p>{description}</p>
+          <div class="card-meta">
+            <time>{date}</time>
+            <span class="read-time">🕐{read_time} read</span>
+          </div>
+        </div>
+      </a>'''
+
+    html = re.sub(
+        r'<a\s+href="[^"]*"\s+class="card card-main fade-in">.*?</a>',
+        new_main_card,
+        html,
+        count=1,
+        flags=re.DOTALL
+    )
+
+    encoded = base64.b64encode(html.encode("utf-8")).decode("utf-8")
+    today = datetime.date.today().isoformat()
+    payload = {
+        "message": f"feat: update index hero with {slug} [{today}]",
+        "content": encoded, "sha": sha, "branch": "main",
+    }
+    resp = requests.put(url, headers=gh_headers(), json=payload)
+    if resp.status_code in (200, 201):
+        print("✅ index.html ヒーロー更新完了")
+        return True
+    print(f"❌ index.html 更新失敗: {resp.status_code} {resp.text}")
+    return False
+
+
 def buttondown_send(slug, title, description, tag):
     if not BD_API_KEY:
         print("⚠️  BUTTONDOWN_API_KEY が未設定。メルマガ送信をスキップします。")
@@ -203,6 +265,10 @@ if __name__ == "__main__":
         args.tag, args.date, args.read_time
     )
     sitemap_ok = github_update_sitemap(args.slug)
+    hero_ok    = github_update_index_hero(
+        args.slug, args.title, args.description,
+        args.tag, args.date, args.read_time
+    )
     bd_ok = True
     if not args.no_newsletter:
         bd_ok = buttondown_send(args.slug, args.title, args.description, args.tag)
@@ -213,4 +279,5 @@ if __name__ == "__main__":
     print(f"  GitHub push       : {'✅' if github_ok    else '⚠️ スキップ/失敗'}")
     print(f"  articles.html更新 : {'✅' if list_ok      else '⚠️ スキップ/失敗'}")
     print(f"  sitemap.xml更新   : {'✅' if sitemap_ok   else '⚠️ スキップ/失敗'}")
+    print(f"  index.htmlヒーロー: {'✅' if hero_ok      else '⚠️ スキップ/失敗'}")
     print(f"  Buttondown        : {'✅' if bd_ok         else '⚠️ スキップ/失敗'}")
