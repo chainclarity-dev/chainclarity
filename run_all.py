@@ -48,7 +48,6 @@ def run(topic=None, send_newsletter=True):
     title       = result["title"]
     description = result["description"]
     tag         = result["tag"]
-    tag_class   = result.get("tag_class", "tag-basics")
     filepath    = result["filepath"]
 
     import datetime
@@ -66,7 +65,7 @@ def run(topic=None, send_newsletter=True):
     # STEP 3: articles.html 自動更新
     print("\n📋 STEP 3: articles.html 自動更新")
     list_ok = github_update_articles_list(
-        slug, title, description, tag, tag_class, date, read_time
+        slug, title, description, tag, date, read_time
     )
 
     # STEP 4: sitemap.xml 自動更新
